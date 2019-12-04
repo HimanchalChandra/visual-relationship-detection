@@ -40,6 +40,7 @@ python predict.py --dataset_path ./data/vrd --glove_path ./data/glove.6B/glove.6
 6) person wear helmet ,score:0.9548267126083374
 7) person near car ,score:0.8904088735580444
 8) person hold person ,score:0.9253084063529968
+9) person on bike ,score:0.9804078735580444
 
 
 ## Reference
