@@ -58,7 +58,6 @@ def main():
 		transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[
 			0.229, 0.224, 0.225])
 	])
-
 	test_transform = transforms.Compose([
 		# transforms.RandomHorizontalFlip(),
 		# transforms.RandomRotation(10),
@@ -87,7 +86,6 @@ def main():
 		dampening = 0
 	else:
 		dampening = opt.dampening
-
 	# define optimizer and criterion
 	optimizer = optim.Adam(parameters)
 	# optimizer = optim.SGD(
@@ -140,7 +138,6 @@ def main():
 					'optimizer_state_dict': optimizer.state_dict()}
 			torch.save(state, os.path.join('snapshots', f'model{epoch}.pth'))
 			print("Epoch {} model saved!\n".format(epoch))
-
 
 
 if __name__ == "__main__":
