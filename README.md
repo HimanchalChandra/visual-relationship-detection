@@ -3,6 +3,7 @@
 ## Getting Started
 ### Prerequisites
 1. Pytorch
+2. Keras RetinaNet https://github.com/fizyr/keras-retinanet
 
 ### Download the pre-trained weights
 https://drive.google.com/file/d/1tZJvOsta6CPIwz5D1ruZGIAncab0Nx2O/view?usp=sharing
