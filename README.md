@@ -22,7 +22,13 @@ python main.py   --epochs 1000 --gpu 0 --save_interval 5 --dataset_path ./data/v
 ### Inference
 ```
 python predict.py --dataset_path ./data/vrd --glove_path ./data/glove.6B/glove.6B.300d.txt
+
+
 ```
+
+## Reference
+https://arxiv.org/abs/1904.07798
+
 
 ## License
 This project is licensed under the MIT License 
