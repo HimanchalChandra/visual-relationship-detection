@@ -7,6 +7,8 @@
 ### Download the pre-trained weights
 
 ### Dataset
+1) VRD
+2) Visual Genome (To do)
 
  
 ### Training
