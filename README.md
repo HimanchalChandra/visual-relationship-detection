@@ -13,12 +13,12 @@
  
 ### Training
 ```
-python main.py   --epochs 1000 --gpu 0 --save_interval 5
+python main.py   --epochs 1000 --gpu 0 --save_interval 5 --dataset_path /data/vrd --glove_path /data/glove.6B/glove.6B.300d.txt
 ```
 
 ### Inference
 ```
-python predict.py
+python predict.py --dataset_path /data/vrd --glove_path /data/glove.6B/glove.6B.300d.txt
 ```
 
 ## License
