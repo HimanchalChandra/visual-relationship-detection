@@ -6,6 +6,9 @@
 
 ### Download the pre-trained weights
 
+### Download Glove word vectors
+https://nlp.stanford.edu/projects/glove/
+
 ### Dataset
 1) VRD - Download from  https://cs.stanford.edu/people/ranjaykrishna/vrd/
 2) Visual Genome (To do)
@@ -23,4 +26,5 @@ python predict.py --dataset_path ./data/vrd --glove_path ./data/glove.6B/glove.6
 
 ## License
 This project is licensed under the MIT License 
+
 
