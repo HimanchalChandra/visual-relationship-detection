@@ -10,11 +10,14 @@
 
  
 ### Training
-
+```
+python main.py   --epochs 1000 --gpu 0 --save_interval 5
+```
 
 ### Inference
-
-
+```
+python predict.py
+```
 
 ## License
 This project is licensed under the MIT License 
