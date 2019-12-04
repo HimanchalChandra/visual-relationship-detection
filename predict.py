@@ -83,7 +83,7 @@ def main():
 	print("Model Restored")
 
 
-	img = Image.open('/Users/pranoyr/Desktop/test/8559246586_4bd43f9505_b.jpg')
+	img = Image.open('./images/8559246586_4bd43f9505_b.jpg')
 	detections = retina_net.detect(img)
 	print(detections)
 	cropped_imgs = []

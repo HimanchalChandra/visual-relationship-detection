@@ -1,4 +1,4 @@
-*.jpg
+/results
 *.csv
 *.txt
 *.pth
