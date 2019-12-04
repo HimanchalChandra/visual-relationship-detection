@@ -7,7 +7,7 @@
 ### Download the pre-trained weights
 
 ### Dataset
-1) VRD
+1) VRD - Download from  https://cs.stanford.edu/people/ranjaykrishna/vrd/
 2) Visual Genome (To do)
 
  
