@@ -5,6 +5,7 @@
 1. Pytorch
 
 ### Download the pre-trained weights
+https://drive.google.com/file/d/1tZJvOsta6CPIwz5D1ruZGIAncab0Nx2O/view?usp=sharing
 
 ### Download Glove word vectors
 https://nlp.stanford.edu/projects/glove/
