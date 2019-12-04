@@ -21,6 +21,7 @@ from shapely.geometry import box
 from shapely.ops import cascaded_union
 from retinanet.obj_det_retinanet import ObjDetRetinanet
 from utils.util import calc_iou,calc_intersection
+from opts import parse_opts
 # model = vgg16(pretrained=True)
 # modules = list(model.children())[:-2]  
 # base_net = nn.Sequential(*modules)
@@ -28,15 +29,15 @@ from utils.util import calc_iou,calc_intersection
 # print(base_net)
 # import torch
 
+opt = parse_opts()
 
 retina_net = ObjDetRetinanet()
 		
-with open('/Volumes/Passport/vrd/json_dataset/predicates.json', 'r') as f:
+with open(os.path.join(opt.dataset_path, 'json_dataset', 'predicates.json'), 'r') as f:
 	predicates = json.load(f)
 
-with open('/Volumes/Passport/vrd/json_dataset/objects.json', 'r') as f:
-	objects = json.load(f)
-
+with open(os.path.join(opt.dataset_path, 'json_dataset', 'objects.json'), 'r') as f:
+    objects = json.load(f)
 
 word2int_obj = {}
 for i, obj in enumerate(objects):
