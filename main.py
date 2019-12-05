@@ -123,7 +123,7 @@ def main():
     for epoch in range(start_epoch, opt.epochs+1):
         # train, test model
         train_loss, train_acc = train(
-            model, train_loader, criterion, optimizer, epoch, device)
+            model, train_loader, criterion, optimizer, epoch, device, opt.log_interval)
         # scheduler.step(train_loss)
         if (epoch) % opt.save_interval == 0:
             val_loss, val_acc = validate(model, val_loader, criterion, epoch, device)

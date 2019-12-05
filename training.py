@@ -18,7 +18,7 @@ from utils import AverageMeter, calculate_accuracy
 
 
 
-def train(model, loader, criterion, optimizer, epoch, device):
+def train(model, loader, criterion, optimizer, epoch, device, log_interval):
 
     model.train()
 
