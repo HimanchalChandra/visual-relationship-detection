@@ -13,9 +13,7 @@ import torch.nn as nn
 import argparse
 import random
 import cv2
-from util import calculate_accuracy
 from utils import AverageMeter, calculate_accuracy
-
 
 
 def train(model, loader, criterion, optimizer, epoch, device, log_interval):
@@ -33,6 +31,7 @@ def train(model, loader, criterion, optimizer, epoch, device, log_interval):
 
         # compute loss
         loss = criterion(outputs, targets)
+        train_loss += loss.item()
         acc = calculate_accuracy(outputs, targets)
 
         losses.update(loss.item(), imgs.size(0))

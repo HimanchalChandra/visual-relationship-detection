@@ -37,4 +37,4 @@ def validate(model, loader, criterion, epoch, device):
         accuracies.update(acc, imgs.size(0))
 
 
-    
+
