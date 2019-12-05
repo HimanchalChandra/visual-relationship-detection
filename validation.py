@@ -26,7 +26,6 @@ def validate(model, loader, criterion, epoch, device):
     for imgs, spatial_locations, word_vectors, targets in loader:
         # computse outputs
         imgs, spatial_locations, word_vectors, targets = imgs.to(device), spatial_locations.to(device), word_vectors.to(device),  targets.to(device)
-        N_count += imgs.size(0)
         outputs = model(imgs, spatial_locations, word_vectors)
 
         # compute loss
