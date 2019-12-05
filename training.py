@@ -21,7 +21,8 @@ from utils import AverageMeter, calculate_accuracy
 def train(model, loader, criterion, optimizer, epoch, device, log_interval):
 
     model.train()
-
+    
+    train_loss = 0.0
     losses = AverageMeter()
     accuracies = AverageMeter()
     for i, (imgs, spatial_locations, word_vectors, targets) in enumerate(loader):
@@ -41,4 +42,15 @@ def train(model, loader, criterion, optimizer, epoch, device, log_interval):
         loss.backward()
         optimizer.step()
 
-        
+        # show information
+        if (i+1) % log_interval == 0:
+            avg_loss = train_loss / log_interval
+            print('Train Epoch: {} [{}/{} ({:.0f}%)]\tLoss: {:.6f}'.format(
+                epoch, losses.count, len(loader.dataset), 100. * (i + 1) / len(loader), avg_loss))
+            train_loss = 0.0
+
+    # show information
+    print('Train set ({:d} samples): Average loss: {:.4f}\tAcc: {:.4f}%'.format(
+        losses.count, losses.avg, accuracies.avg))
+
+    return losses.avg, accuracies.avg  
