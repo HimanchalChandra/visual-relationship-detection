@@ -18,7 +18,7 @@ from utils import AverageMeter, calculate_accuracy
 
 
 
-def train(model, loader, criterion, optimizer, epoch, device, epoch_logger, batch_logger):
+def train(model, loader, criterion, optimizer, epoch, device):
 
     model.train()
 
@@ -41,26 +41,4 @@ def train(model, loader, criterion, optimizer, epoch, device, epoch_logger, batc
         loss.backward()
         optimizer.step()
 
-        print('Epoch: [{0}][{1}/{2}]\t'
-              'Loss {loss.val:.4f} ({loss.avg:.4f})\t'
-              'Acc {acc.val:.3f} ({acc.avg:.3f})'.format(
-                  epoch,
-                  i + 1,
-                  len(loader),
-                  loss=losses,
-                  acc=accuracies))
-
-    epoch_logger.log({
-        'epoch': epoch,
-        'loss': losses.avg,
-        'acc': accuracies.avg,
-        'lr': optimizer.param_groups[0]['lr']
-    })
-
-
-    # # show information
-    # acc = 100. * (correct / N_count)
-    # average_loss = sum(losses)/len(loader)
-    # print('Train set ({:d} samples): Average loss: {:.4f}\tAcc: {:.4f}%'.format(
-    #     N_count, average_loss, acc))
-    # return average_loss, acc
+        

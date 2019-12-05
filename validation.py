@@ -17,7 +17,7 @@ from util import AverageMeter, calculate_accuracy
 
 
 
-def validate(model, loader, criterion, epoch, device, logger):
+def validate(model, loader, criterion, epoch, device):
 
     model.eval()
 
@@ -36,7 +36,5 @@ def validate(model, loader, criterion, epoch, device, logger):
         losses.update(loss.item(), imgs.size(0))
         accuracies.update(acc, imgs.size(0))
 
-    logger.log({'epoch': epoch, 'loss': losses.avg, 'acc': accuracies.avg})
-        
 
     

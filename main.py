@@ -78,15 +78,6 @@ def main():
     val_loader = DataLoader(val_dataset, batch_size=2, shuffle=True,
                             num_workers=2, collate_fn=val_dataset.my_collate)
 
-    train_logger = Logger(
-        os.path.join(opt.result_path, 'train.log'),
-        ['epoch', 'loss', 'acc', 'lr'])
-    train_batch_logger = Logger(
-        os.path.join(opt.result_path, 'train_batch.log'),
-        ['epoch', 'batch', 'iter', 'loss', 'acc', 'lr'])
-    val_logger = Logger(
-        os.path.join(opt.result_path, 'val.log'), ['epoch', 'loss', 'acc'])
-
     print(f'Number of training examples: {len(train_loader.dataset)}')
     print(f'Number of validation examples: {len(val_loader.dataset)}')
 
@@ -132,10 +123,10 @@ def main():
     for epoch in range(start_epoch, opt.epochs+1):
         # train, test model
         train_loss, train_acc = train(
-            model, train_loader, criterion, optimizer, epoch, device, train_logger, train_batch_logger)
+            model, train_loader, criterion, optimizer, epoch, device)
         # scheduler.step(train_loss)
         if (epoch) % opt.save_interval == 0:
-            val_loss, val_acc = validate(model, val_loader, criterion, epoch, device, val_loader)
+            val_loss, val_acc = validate(model, val_loader, criterion, epoch, device)
             # scheduler.step(val_loss)
             # write summary
             summary_writer.add_scalar(
