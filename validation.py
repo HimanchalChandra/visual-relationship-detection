@@ -37,5 +37,5 @@ def validate(model, loader, criterion, epoch, device):
 
     # show information
     print('Validation set ({:d} samples): Average loss: {:.4f}\tAcc: {:.4f}%'.format(losses.count, losses.avg, accuracies.avg))
-    return losses.avg, accuracies.avg
+    return losses.avg, accuracies.avg * 100
 

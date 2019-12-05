@@ -50,6 +50,6 @@ def train(model, loader, criterion, optimizer, epoch, device, log_interval):
 
     # show information
     print('Train set ({:d} samples): Average loss: {:.4f}\tAcc: {:.4f}%'.format(
-        losses.count, losses.avg, accuracies.avg))
+        losses.count, losses.avg, accuracies.avg * 100))
 
     return losses.avg, accuracies.avg  
