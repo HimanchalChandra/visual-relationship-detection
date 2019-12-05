@@ -13,30 +13,30 @@ import torch.nn as nn
 import argparse
 import random
 import cv2
+from util import AverageMeter, calculate_accuracy
 
 
-def validate(model, loader, criterion, device):
+
+def validate(model, loader, criterion, epoch, device, logger):
+
     model.eval()
-    N_count = 0
-    correct = 0
-    losses = []
+
+    losses = AverageMeter()
+    accuracies = AverageMeter()
     for imgs, spatial_locations, word_vectors, targets in loader:
-        # compute outputs
+        # computse outputs
         imgs, spatial_locations, word_vectors, targets = imgs.to(device), spatial_locations.to(device), word_vectors.to(device),  targets.to(device)
         N_count += imgs.size(0)
         outputs = model(imgs, spatial_locations, word_vectors)
 
         # compute loss
         loss = criterion(outputs, targets)
-        losses.append(loss.item())
+        acc = calculate_accuracy(outputs, targets)
 
-        # to compute accuracy
-        outputs = torch.softmax(outputs, dim=1)
-        preds = outputs.argmax(dim=1, keepdim=True)
-        correct += preds.eq(targets.view_as(preds)).sum().item()
+        losses.update(loss.item(), imgs.size(0))
+        accuracies.update(acc, imgs.size(0))
 
-    # show information
-    acc = 100. * (correct / N_count)
-    average_loss = sum(losses)/len(loader)
-    print('Validation set ({:d} samples): Average loss: {:.4f}\tAcc: {:.4f}%'.format(N_count, average_loss, acc))
-    return average_loss, acc
+    logger.log({'epoch': epoch, 'loss': losses.avg, 'acc': accuracies.avg})
+        
+
+    

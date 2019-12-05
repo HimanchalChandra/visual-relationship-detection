@@ -13,45 +13,54 @@ import torch.nn as nn
 import argparse
 import random
 import cv2
+from util import calculate_accuracy
+from utils import AverageMeter, calculate_accuracy
 
 
-def train(model, loader, criterion, optimizer, epoch, device, log_interval):
+
+def train(model, loader, criterion, optimizer, epoch, device, epoch_logger, batch_logger):
+
     model.train()
-    train_loss = 0.0
-    N_count = 0
-    correct = 0
-    losses = []
+
+    losses = AverageMeter()
+    accuracies = AverageMeter()
     for i, (imgs, spatial_locations, word_vectors, targets) in enumerate(loader):
         # compute outputs
         imgs, spatial_locations, word_vectors, targets = imgs.to(
             device), spatial_locations.to(device), word_vectors.to(device),  targets.to(device)
-        N_count += imgs.size(0)
         outputs = model(imgs, spatial_locations, word_vectors)
 
         # compute loss
         loss = criterion(outputs, targets)
-        losses.append(loss.item())
-        train_loss += loss.item()
+        acc = calculate_accuracy(outputs, targets)
 
-        # to compute accuracy
-        outputs = torch.softmax(outputs, dim=1)
-        preds = outputs.argmax(dim=1, keepdim=True)
-        correct += preds.eq(targets.view_as(preds)).sum().item()
+        losses.update(loss.item(), imgs.size(0))
+        accuracies.update(acc, imgs.size(0))
 
         optimizer.zero_grad()
         loss.backward()
         optimizer.step()
 
-        # show information
-        if (i+1) % log_interval == 0:
-            avg_loss = train_loss / log_interval
-            print('Train Epoch: {} [{}/{} ({:.0f}%)]\tLoss: {:.6f}'.format(
-                epoch, N_count, len(loader.dataset), 100. * (i + 1) / len(loader), avg_loss))
-            train_loss = 0.0
+        print('Epoch: [{0}][{1}/{2}]\t'
+              'Loss {loss.val:.4f} ({loss.avg:.4f})\t'
+              'Acc {acc.val:.3f} ({acc.avg:.3f})'.format(
+                  epoch,
+                  i + 1,
+                  len(loader),
+                  loss=losses,
+                  acc=accuracies))
 
-    # show information
-    acc = 100. * (correct / N_count)
-    average_loss = sum(losses)/len(loader)
-    print('Train set ({:d} samples): Average loss: {:.4f}\tAcc: {:.4f}%'.format(
-        N_count, average_loss, acc))
-    return average_loss, acc
+    epoch_logger.log({
+        'epoch': epoch,
+        'loss': losses.avg,
+        'acc': accuracies.avg,
+        'lr': optimizer.param_groups[0]['lr']
+    })
+
+
+    # # show information
+    # acc = 100. * (correct / N_count)
+    # average_loss = sum(losses)/len(loader)
+    # print('Train set ({:d} samples): Average loss: {:.4f}\tAcc: {:.4f}%'.format(
+    #     N_count, average_loss, acc))
+    # return average_loss, acc
