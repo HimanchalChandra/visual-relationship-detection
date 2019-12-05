@@ -13,7 +13,7 @@ import torch.nn as nn
 import argparse
 import random
 import cv2
-from util import AverageMeter, calculate_accuracy
+from utils import AverageMeter, calculate_accuracy
 
 
 
