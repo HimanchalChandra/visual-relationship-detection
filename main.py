@@ -134,9 +134,9 @@ def main():
             summary_writer.add_scalar(
                 'losses/val_loss', val_loss, global_step=epoch)
             summary_writer.add_scalar(
-                'acc/train_acc', train_acc, global_step=epoch)
+                'acc/train_acc', train_acc * 100, global_step=epoch)
             summary_writer.add_scalar(
-                'acc/val_acc', val_acc, global_step=epoch)
+                'acc/val_acc', val_acc * 100, global_step=epoch)
 
             state = {'epoch': epoch, 'model_state_dict': model.state_dict(),
                      'optimizer_state_dict': optimizer.state_dict()}
