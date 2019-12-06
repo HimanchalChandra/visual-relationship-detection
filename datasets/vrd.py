@@ -11,7 +11,7 @@ from torch.utils.data import Dataset, DataLoader
 from torchvision import transforms, utils
 import os
 import json
-from utils.util import calc_iou, calc_intersection
+from utils.util import calc_iou, calc_intersection, Scale
 
 
 class VrdDataset(Dataset):
@@ -29,6 +29,7 @@ class VrdDataset(Dataset):
         self.imgs_list = image_names.split('\n')[:-1]
 
         self.transform = transform
+        self.scale = Scale()
         self.root = os.path.join(
             dataset_path, 'sg_dataset', f'sg_{type}_images')
 
@@ -101,8 +102,12 @@ class VrdDataset(Dataset):
             else:
                 cflag_obj = 0
 
-            spatial_locations.append([iou, bbox_sub_scaled[0], bbox_sub_scaled[1], bbox_sub_scaled[2], bbox_sub_scaled[3],
-                                      bbox_obj_scaled[0], bbox_obj_scaled[1], bbox_obj_scaled[2], bbox_obj_scaled[3], cflag_sub, cflag_obj])
+            # feature scaling
+            bbox_sub_scaled = self.scale(bbox_sub_scaled)
+            bbox_obj_scaled = self.scale(bbox_obj_scaled)
+
+            spatial_locations.append([iou, bbox_sub_scaled[0].item(), bbox_sub_scaled[1].item(), bbox_sub_scaled[2].item(), bbox_sub_scaled[3].item(),
+                                      bbox_obj_scaled[0].item(), bbox_obj_scaled[1].item(), bbox_obj_scaled[2].item(), bbox_obj_scaled[3].item(), cflag_sub, cflag_obj])
             # word vectors
             word_vectors.append([sub_category, object_category])
             # predicate label

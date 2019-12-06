@@ -47,3 +47,11 @@ def calc_intersection(boxA, boxB):
 	intersection = interArea / boxAArea
 	return intersection
 
+class Scale(object):
+    """Feature Scaling"""
+
+    def __call__(self, sample):
+        sample = sample/224
+        return sample
+
+

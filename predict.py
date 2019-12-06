@@ -82,8 +82,7 @@ def main():
 	model.load_state_dict(checkpoint['model_state_dict'])
 	print("Model Restored")
 
-
-	img = Image.open('./images/8559246586_4bd43f9505_b.jpg')
+	img = Image.open('./images/photo-1538037054379-51da198a4a1a.png')
 	detections = retina_net.detect(img)
 	print(detections)
 	cropped_imgs = []
@@ -172,7 +171,7 @@ def main():
 	scores, preds = outputs.max(dim=1, keepdim=True) # get the index of the max log-probability
 
 	# apply mask for thresholding
-	mask = scores > 0.7
+	mask = scores > 0.0
 
 	preds = preds[mask]
 	scores = scores[mask]
@@ -190,12 +189,13 @@ def main():
 		img = transforms.ToPILImage()(img)
 		score, pred = outputs[k].max(dim=0, keepdim=True) # get the index of the max log-probability
 		print(score)
-		if (score.item() > 0.7):
+		if (score.item() > 0.0):
 			bboxes = spatial_locations[k]
 			draw1 = ImageDraw.Draw(img)
 			draw1.rectangle(((int(bboxes[1].item()), int(bboxes[2].item())), (int(bboxes[3].item()), int(bboxes[4].item()))))
 			draw1.rectangle(((int(bboxes[5].item()), int(bboxes[6].item())), (int(bboxes[7].item()), int(bboxes[8].item()))))
-		
+			print(int(bboxes[1].item()), int(bboxes[2].item()), int(bboxes[3].item()), int(bboxes[4].item()))
+			print(int(bboxes[5].item()), int(bboxes[6].item()), int(bboxes[7].item()), int(bboxes[8].item()))
 			#cv2.rectangle(img, (int(sub_obj[0].item()), int(sub_obj[1].item())), (int(sub_obj[2].item()), int(sub_obj[3].item())), (255,0,0), 2)
 			img.save(f'results/{str(j)}.jpg')
 			j+=1
