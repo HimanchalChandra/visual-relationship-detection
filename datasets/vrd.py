@@ -11,7 +11,7 @@ from torch.utils.data import Dataset, DataLoader
 from torchvision import transforms, utils
 import os
 import json
-from utils.util import calc_iou, calc_intersection, Scale
+from utils.util import calc_iou, calc_intersection
 
 
 class VrdDataset(Dataset):
