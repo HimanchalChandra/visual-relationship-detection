@@ -15,3 +15,8 @@ scale = Scale()
         
 a = torch.Tensor([224,0])
 print(scale(a))
+
+
+a = [1,2,3]
+a = [i/ 3 for i in a]
+print(a)
