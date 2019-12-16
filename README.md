@@ -8,6 +8,9 @@
 ### Download the pre-trained weights
 https://drive.google.com/file/d/1tZJvOsta6CPIwz5D1ruZGIAncab0Nx2O/view?usp=sharing
 
+### Download the pre-trained weights for Retina Net
+https://www.dropbox.com/s/hdwd6qjir032ktj/resnet50_vrd_inference.h5?dl=0
+
 ### Download Glove word vectors
 https://nlp.stanford.edu/projects/glove/
 
@@ -40,6 +43,7 @@ python predict.py --dataset_path ./data/vrd --glove_path ./data/glove.6B/glove.6
 6) person wear helmet ,score:0.9548267126083374
 7) person near car ,score:0.8904088735580444
 8) person hold person ,score:0.9253084063529968
+9) person on bike ,score:0.9804078735580444
 
 
 ## Reference
