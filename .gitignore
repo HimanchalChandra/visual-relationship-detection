@@ -1,5 +1,4 @@
 /results
-*.csv
 *.txt
 *.pth
 *.h5
