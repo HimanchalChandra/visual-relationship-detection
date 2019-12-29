@@ -101,10 +101,6 @@ class VrdDataset(Dataset):
             else:
                 cflag_obj = 0
 
-            # feature scaling
-            bbox_sub_scaled = [i/224 for i in bbox_sub_scaled]
-            bbox_obj_scaled = [i/224 for i in bbox_obj_scaled]
-
             spatial_locations.append([iou, bbox_sub_scaled[0], bbox_sub_scaled[1], bbox_sub_scaled[2], bbox_sub_scaled[3],
                                       bbox_obj_scaled[0], bbox_obj_scaled[1], bbox_obj_scaled[2], bbox_obj_scaled[3], cflag_sub, cflag_obj])
             # word vectors
