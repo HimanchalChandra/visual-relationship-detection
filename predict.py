@@ -76,11 +76,13 @@ def main():
 	model = Net(num_classes=70)
 	model = model.to(device)
 
-
+	
 	# load pretrained weights
 	checkpoint = torch.load('./snapshots/resnet_model655.pth', map_location='cpu')
 	model.load_state_dict(checkpoint['model_state_dict'])
 	print("Model Restored")
+
+	model.eval()
 
 	img = Image.open('./images/photo-1538037054379-51da198a4a1a.png')
 	detections = retina_net.detect(img)
@@ -165,8 +167,8 @@ def main():
 	print(word_vectors.shape)
 
 	
-
-	outputs = model(imgs, spatial_locations, word_vectors)
+	with torch.no_grad():
+		outputs = model(imgs, spatial_locations, word_vectors)
 
 	outputs = torch.softmax(outputs, dim=1)
 	scores, preds = outputs.max(dim=1, keepdim=True) # get the index of the max log-probability
