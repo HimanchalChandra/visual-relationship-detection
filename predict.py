@@ -82,6 +82,7 @@ def main():
 	model.load_state_dict(checkpoint['model_state_dict'])
 	print("Model Restored")
 
+	model.eval()
 
 	img = Image.open('./images/8559246586_4bd43f9505_b.jpg')
 	detections = retina_net.detect(img)
