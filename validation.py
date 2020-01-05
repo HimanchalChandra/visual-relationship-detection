@@ -23,17 +23,18 @@ def validate(model, loader, criterion, epoch, device):
 
     losses = AverageMeter()
     accuracies = AverageMeter()
-    for imgs, spatial_locations, word_vectors, targets in loader:
-        # computse outputs
-        imgs, spatial_locations, word_vectors, targets = imgs.to(device), spatial_locations.to(device), word_vectors.to(device),  targets.to(device)
-        outputs = model(imgs, spatial_locations, word_vectors)
+    with torch.no_grad():
+        for imgs, spatial_locations, word_vectors, targets in loader:
+            # computse outputs
+            imgs, spatial_locations, word_vectors, targets = imgs.to(device), spatial_locations.to(device), word_vectors.to(device),  targets.to(device)
+            outputs = model(imgs, spatial_locations, word_vectors)
 
-        # compute loss
-        loss = criterion(outputs, targets)
-        acc = calculate_accuracy(outputs, targets)
+            # compute loss
+            loss = criterion(outputs, targets)
+            acc = calculate_accuracy(outputs, targets)
 
-        losses.update(loss.item(), imgs.size(0))
-        accuracies.update(acc, imgs.size(0))
+            losses.update(loss.item(), imgs.size(0))
+            accuracies.update(acc, imgs.size(0))
 
     # show information
     print('Validation set ({:d} samples): Average loss: {:.4f}\tAcc: {:.4f}%'.format(losses.count, losses.avg, accuracies.avg * 100))
