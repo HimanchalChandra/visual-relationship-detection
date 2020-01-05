@@ -20,20 +20,21 @@ def validate(model, loader, criterion, device):
     N_count = 0
     correct = 0
     losses = []
-    for imgs, spatial_locations, word_vectors, targets in loader:
-        # compute outputs
-        imgs, spatial_locations, word_vectors, targets = imgs.to(device), spatial_locations.to(device), word_vectors.to(device),  targets.to(device)
-        N_count += imgs.size(0)
-        outputs = model(imgs, spatial_locations, word_vectors)
+    with torch.no_grad():
+        for imgs, spatial_locations, word_vectors, targets in loader:
+            # compute outputs
+            imgs, spatial_locations, word_vectors, targets = imgs.to(device), spatial_locations.to(device), word_vectors.to(device),  targets.to(device)
+            N_count += imgs.size(0)
+            outputs = model(imgs, spatial_locations, word_vectors)
 
-        # compute loss
-        loss = criterion(outputs, targets)
-        losses.append(loss.item())
+            # compute loss
+            loss = criterion(outputs, targets)
+            losses.append(loss.item())
 
-        # to compute accuracy
-        outputs = torch.softmax(outputs, dim=1)
-        preds = outputs.argmax(dim=1, keepdim=True)
-        correct += preds.eq(targets.view_as(preds)).sum().item()
+            # to compute accuracy
+            outputs = torch.softmax(outputs, dim=1)
+            preds = outputs.argmax(dim=1, keepdim=True)
+            correct += preds.eq(targets.view_as(preds)).sum().item()
 
     # show information
     acc = 100. * (correct / N_count)
