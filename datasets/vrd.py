@@ -14,6 +14,22 @@ import json
 from utils.util import calc_iou, calc_intersection
 
 
+def make_image_list(dataset_path, type):
+    imgs_list = []
+    with open(os.path.join(dataset_path, 'json_dataset','annotations_{type}.json'), 'r') as f:
+        annotations = json.load(f)
+    sg_images = os.listdir(os.path.join(dataset_path,'sg_dataset','sg_{type}_images'))
+
+    annotations_copy = annotations.copy()
+    for ann in annotations.items():
+        if(not annotations[ann[0]] or ann[0] not in sg_images):
+            annotations_copy.pop(ann[0])
+ 
+    for ann in annotations_copy.items():
+        imgs_list.append(ann[0])
+    return imgs_list
+
+
 class VrdDataset(Dataset):
     """VRD dataset."""
 
@@ -22,11 +38,7 @@ class VrdDataset(Dataset):
         with open(os.path.join(dataset_path, 'json_dataset', f'annotations_{type}.json'), 'r') as f:
             self.annotations = json.load(f)
 
-        # read image filenames
-        with open(os.path.join(dataset_path, f'{type}.txt'), 'r') as f:
-            image_names = f.read()
-
-        self.imgs_list = image_names.split('\n')[:-1]
+        self.imgs_list = make_image_list(dataset_path, type)
 
         self.transform = transform
         self.root = os.path.join(
