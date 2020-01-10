@@ -21,17 +21,19 @@ def train(model, loader, criterion, optimizer, epoch, device, log_interval):
     N_count = 0
     correct = 0
     losses = []
-    for i, (imgs, spatial_locations, word_vectors, targets) in enumerate(loader):
+    for i, (imgs, spatial_locations, word_vectors, targets_confidences, targets_predicates) in enumerate(loader):
         # compute outputs
         imgs, spatial_locations, word_vectors, targets = imgs.to(
             device), spatial_locations.to(device), word_vectors.to(device),  targets.to(device)
         N_count += imgs.size(0)
-        outputs = model(imgs, spatial_locations, word_vectors)
+        confidences, predicates = model(imgs, spatial_locations, word_vectors)
 
         # compute loss
-        loss = criterion(outputs, targets)
-        losses.append(loss.item())
-        train_loss += loss.item()
+        loss1 = criterion(confidences, targets_confidences)
+        loss2 = criterion(predicates, targets_predicates)
+        total_loss = loss1 + loss2
+        losses.append(total_loss.item())
+        train_loss += total_loss.item()
 
         # to compute accuracy
         outputs = torch.softmax(outputs, dim=1)
@@ -39,7 +41,7 @@ def train(model, loader, criterion, optimizer, epoch, device, log_interval):
         correct += preds.eq(targets.view_as(preds)).sum().item()
 
         optimizer.zero_grad()
-        loss.backward()
+        total_loss.backward()
         optimizer.step()
 
         # show information

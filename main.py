@@ -9,6 +9,7 @@ from torchvision import transforms, utils
 import torch.optim as optim
 from torchvision.models import vgg16
 from PIL import Image, ImageFont, ImageDraw
+from torch.nn import BCEWithLogitsLoss
 from dataset import get_dataset
 import json
 import torch.nn as nn
@@ -96,7 +97,7 @@ def main():
 	# 		weight_decay=opt.weight_decay,
 	# 		nesterov=opt.nesterov)
 	# scheduler = lr_scheduler.ReduceLROnPlateau(optimizer, 'min', patience=opt.lr_patience)
-	criterion = nn.CrossEntropyLoss()
+	criterion = BCEWithLogitsLoss()
 
 	# pretrained weights
 	if opt.weights:

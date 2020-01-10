@@ -68,35 +68,74 @@ class LanguageModule(nn.Module):
         return x
 
 
-class Net(nn.Module):
-    def __init__(self, num_classes=10):
-        super(Net, self).__init__()
-        vm = models.resnet18(pretrained=True)
-        self.vm = torch.nn.Sequential(*(list(vm.children())[:-1]))
-        self.lm = LanguageModule(300, 512)
-        self.fc1 = nn.Linear(523, 4096)
-        self.fc1_bn = nn.BatchNorm1d(4096)
-        self.fc1_final = nn.Linear(4096, num_classes)
+class VisionModule(nn.Module):
+    """ Vision Moddule"""
 
-    def forward(self, img, spatial_locations, word_vectors):
-        vm_out = self.vm(img)
-        lm_out = self.lm(word_vectors)
+    def __init__(self):
+        super(VisionModule, self).__init__()
+        resnet = models.resnet18(pretrained=True)
+        modules = list(resnet.children())[:-1]
+        self.resnet_backbone = nn.Sequential(*modules)
+        self.fc = nn.Linear(512, 4096)
 
-        vm_out = vm_out.view(vm_out.size(0), -1)
-        lm_out = lm_out.view(lm_out.size(0), -1)
-        spatial_locations = spatial_locations.view(spatial_locations.size(0), -1)
-
-
-        combined_features = torch.cat([vm_out, lm_out, spatial_locations], dim=1)
-
-        x1 = self.fc1(combined_features)
-        x1 = self.fc1_bn(x1)
-        x1 = F.relu(x1)
-        x1 = self.fc1_final(x1)
-
+    def forward(self, x):
+        x = self.resnet_backbone(x)
+        x = x.view(x.size(0), -1)
+        x = self.fc(x)
+        x = F.relu(x)
         return x
 
 
+class Net(nn.Module):
+    def __init__(self, num_classes=10):
+        super(Net, self).__init__()
+        self.visual_module = VisionModule()
+        self.language_module = LanguageModule(300, 500)
+
+        self.fc_vm = self.fc1 = nn.Linear(4096, 500)
+        self.fc_lm = self.fc1 = nn.Linear(500, 500)
+        self.fc_sp = self.fc1 = nn.Linear(8, 500)
+
+        self.fc1 = nn.Linear(4125, 100)
+        #self.fc1_bn = nn.BatchNorm1d(4096)
+        self.fc2 = nn.Linear(100, 1)
+
+        #self.fc1_bn = nn.BatchNorm1d(4096)
+        self.fc3 = nn.Linear(4096, 500)
+        self.fc4 = nn.Linear(500, num_classes)
+
+    def forward(self, img, spatial_locations, word_vectors):
+        vm_out = self.visual_module(img)
+        lm_out = self.language_module(word_vectors)
+
+        vm_out = vm_out.view(vm_out.size(0), -1)
+        lm_out = lm_out.view(lm_out.size(0), -1)
+        sp_out = spatial_locations.view(spatial_locations.size(0), -1)
+
+        vm_out = self.fc_vm(vm_out)
+        lm_out = self.fc_lm(lm_out)
+        sp_out = self.fc_sp(sp_out)
+
+        # concat
+        multi_model_features = torch.cat([vm_out, lm_out, sp_out], dim=1)
+
+        # confidence subnetwork
+        c = self.fc1(multi_model_features)
+        x_c = F.relu(c)
+        c = self.fc2(x_c)
+ 
+        # relation subnetwork
+        r = torch.cat([x_c, multi_model_features], dim=1)
+        r = self.fc3(r)
+        r = F.relu(r)
+        r = self.fc4(r)
+
+        return c, r
+
+
 if __name__ == "__main__":
-    net = Net(num_classes=100)
-    print(net.parameters)
+    model = VisionModule()
+
+    x = torch.Tensor(1, 3, 64, 64)
+    x = model(x)
+    print(x.shape)
