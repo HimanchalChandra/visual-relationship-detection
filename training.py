@@ -13,7 +13,7 @@ import torch.nn as nn
 import argparse
 import random
 import cv2
-from util import AverageMeter, calculate_accuracy
+from util import AverageMeter, Metric
 
 
 def train(model, loader, criterion, optimizer, epoch, device, log_interval):
@@ -22,20 +22,21 @@ def train(model, loader, criterion, optimizer, epoch, device, log_interval):
     
     train_loss = 0.0
     losses = AverageMeter()
-    accuracies = AverageMeter()
-    for i, (imgs, spatial_locations, word_vectors, targets) in enumerate(loader):
+    metric = Metric(opt.num_classes)
+    for i, (imgs, spatial_locations, word_vectors, targets_confidences, targets_predicates) in enumerate(loader):
         # compute outputs
         imgs, spatial_locations, word_vectors, targets = imgs.to(
             device), spatial_locations.to(device), word_vectors.to(device),  targets.to(device)
-        outputs = model(imgs, spatial_locations, word_vectors)
+        confidences, predicates = model(imgs, spatial_locations, word_vectors)
 
         # compute loss
-        loss = criterion(outputs, targets)
-        train_loss += loss.item()
-        acc = calculate_accuracy(outputs, targets)
+        loss1 = criterion(confidences, targets_confidences)
+        loss2 = criterion(predicates, targets_predicates)
+        tot_loss = loss1 + loss2
+        train_loss += tot_loss.item()
 
-        losses.update(loss.item(), imgs.size(0))
-        accuracies.update(acc, imgs.size(0))
+        losses.update(train_loss.item(), imgs.size(0))
+        metric.update(predicates, targets_predicates)
 
         optimizer.zero_grad()
         loss.backward()
@@ -49,7 +50,8 @@ def train(model, loader, criterion, optimizer, epoch, device, log_interval):
             train_loss = 0.0
 
     # show information
+    recall = metric.compute_metrics()
     print('Train set ({:d} samples): Average loss: {:.4f}\tAcc: {:.4f}%'.format(
-        losses.count, losses.avg, accuracies.avg * 100))
+        losses.count, losses.avg, recall * 100))
 
-    return losses.avg, accuracies.avg  
+    return losses.avg, recall 

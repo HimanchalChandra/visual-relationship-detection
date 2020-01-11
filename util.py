@@ -1,4 +1,5 @@
 import csv
+from sklearn.metrics import recall_score
 
 
 class AverageMeter(object):
@@ -58,3 +59,30 @@ def calculate_accuracy(outputs, targets):
     n_correct_elems = correct.float().sum().item()
 
     return n_correct_elems / batch_size
+
+
+class Metric:
+    """ Computer precision/recall for multilabel classifcation
+    """
+
+    def __init__(self, num_classes):
+        # For each class
+        self.precision = dict()
+        self.recall = dict()
+        self.average_precision = dict()
+        self.gt = []
+        self.y = []
+        self.num_classes = num_classes
+    
+    def update(self, outputs, targets):
+        self.y.append(outputs.detach().cpu())
+        self.gt.append(targets.detach().cpu())
+
+    def compute_metrics(self):
+        preds = torch.cat(self.y)
+        targets = torch.cat(self.gt)
+        preds = preds.numpy()
+        targets = targets.numpy()
+
+        recall = recall_score(targets, preds, average='micro')
+        return recall
