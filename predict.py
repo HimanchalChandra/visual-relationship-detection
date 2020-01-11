@@ -37,7 +37,7 @@ with open(os.path.join(opt.dataset_path, 'json_dataset', 'predicates.json'), 'r'
 	predicates = json.load(f)
 
 with open(os.path.join(opt.dataset_path, 'json_dataset', 'objects.json'), 'r') as f:
-    objects = json.load(f)
+	objects = json.load(f)
 
 word2int_obj = {}
 for i, obj in enumerate(objects):
@@ -78,17 +78,16 @@ def main():
 
 
 	# load pretrained weights
-	checkpoint = torch.load('./snapshots/model305.pth', map_location='cpu')
+	checkpoint = torch.load('./snapshots/resnet_model655.pth', map_location='cpu')
 	model.load_state_dict(checkpoint['model_state_dict'])
 	print("Model Restored")
 
-	model.eval()
-
-	img = Image.open('./images/8559246586_4bd43f9505_b.jpg')
+	img = Image.open('./images/photo-1538037054379-51da198a4a1a.png')
 	detections = retina_net.detect(img)
 	print(detections)
 	cropped_imgs = []
 	spatial_locations = []
+	spatial_locations1 = []
 	word_vectors = []
 	word_names = []
 	detections1 = detections.copy()
@@ -173,7 +172,7 @@ def main():
 	scores, preds = outputs.max(dim=1, keepdim=True) # get the index of the max log-probability
 
 	# apply mask for thresholding
-	mask = scores > 0.7
+	mask = scores > 0.95
 
 	preds = preds[mask]
 	scores = scores[mask]
@@ -191,12 +190,13 @@ def main():
 		img = transforms.ToPILImage()(img)
 		score, pred = outputs[k].max(dim=0, keepdim=True) # get the index of the max log-probability
 		print(score)
-		if (score.item() > 0.7):
+		if (score.item() > 0.95):
 			bboxes = spatial_locations[k]
 			draw1 = ImageDraw.Draw(img)
 			draw1.rectangle(((int(bboxes[1].item()), int(bboxes[2].item())), (int(bboxes[3].item()), int(bboxes[4].item()))))
 			draw1.rectangle(((int(bboxes[5].item()), int(bboxes[6].item())), (int(bboxes[7].item()), int(bboxes[8].item()))))
-		
+			print(int(bboxes[1].item()), int(bboxes[2].item()), int(bboxes[3].item()), int(bboxes[4].item()))
+			print(int(bboxes[5].item()), int(bboxes[6].item()), int(bboxes[7].item()), int(bboxes[8].item()))
 			#cv2.rectangle(img, (int(sub_obj[0].item()), int(sub_obj[1].item())), (int(sub_obj[2].item()), int(sub_obj[3].item())), (255,0,0), 2)
 			img.save(f'results/{str(j)}.jpg')
 			j+=1

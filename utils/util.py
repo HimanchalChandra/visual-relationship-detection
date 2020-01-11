@@ -46,4 +46,3 @@ def calc_intersection(boxA, boxB):
 	# compute the intersection value
 	intersection = interArea / boxAArea
 	return intersection
-
