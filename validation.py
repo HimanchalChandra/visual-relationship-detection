@@ -13,28 +13,29 @@ import torch.nn as nn
 import argparse
 import random
 import cv2
-from util import AverageMeter, calculate_accuracy
+from util import AverageMeter, calculate_accuracy, Metric
 
 
-
-def validate(model, loader, criterion, epoch, device):
+def validate(model, loader, criterion, epoch, device, opt):
 
     model.eval()
 
     losses = AverageMeter()
     accuracies = AverageMeter()
+    metric = Metric(opt.num_classes)
     with torch.no_grad():
-        for imgs, spatial_locations, word_vectors, targets in loader:
-            # computse outputs
-            imgs, spatial_locations, word_vectors, targets = imgs.to(device), spatial_locations.to(device), word_vectors.to(device),  targets.to(device)
-            outputs = model(imgs, spatial_locations, word_vectors)
+        for i, (imgs, spatial_locations, word_vectors, targets_confidences, targets_predicates) in enumerate(loader):
+            # compute outputs
+            imgs, spatial_locations, word_vectors, targets_confidences, targets_predicates = imgs.to(device), spatial_locations.to(
+                device), word_vectors.to(device),  targets_confidences.to(device), targets_predicates.to(device)
+            confidences, predicates = model(imgs, spatial_locations, word_vectors)
 
             # compute loss
-            loss = criterion(outputs, targets)
+            loss = criterion(predicates, targets_predicates)
             acc = calculate_accuracy(outputs, targets)
 
             losses.update(loss.item(), imgs.size(0))
-            accuracies.update(acc, imgs.size(0))
+            metric.update()
 
     # show information
     print('Validation set ({:d} samples): Average loss: {:.4f}\tAcc: {:.4f}%'.format(losses.count, losses.avg, accuracies.avg * 100))

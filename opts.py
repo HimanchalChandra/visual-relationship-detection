@@ -43,6 +43,8 @@ def parse_opts():
 						default="vrd", help="Dataset name")
 	parser.add_argument("--model", type=str,
 						default="resnet", help="Model name")
+	parser.add_argument("--num_classes", type=int,
+						 help="Number of classes")
 	parser.add_argument(
 		'--lr_patience',
 		default=10,

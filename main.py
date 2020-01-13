@@ -123,11 +123,11 @@ def main():
     th = 10000
     for epoch in range(start_epoch, opt.epochs+1):
         # train, test model
-        train_loss, train_acc = train(
-            model, train_loader, criterion, optimizer, epoch, device, opt.log_interval)
+        train_loss, train_recall = train(
+            model, train_loader, criterion, optimizer, epoch, device, opt)
         # scheduler.step(train_loss)
         if (epoch) % opt.save_interval == 0:
-            val_loss, val_acc = validate(model, val_loader, criterion, epoch, device)
+            val_loss, val_recall = validate(model, val_loader, criterion, epoch, device, opt)
             # scheduler.step(val_loss)
             # write summary
             summary_writer.add_scalar(
@@ -135,9 +135,9 @@ def main():
             summary_writer.add_scalar(
                 'losses/val_loss', val_loss, global_step=epoch)
             summary_writer.add_scalar(
-                'acc/train_acc', train_acc * 100, global_step=epoch)
+                'acc/train_acc', train_recall * 100, global_step=epoch)
             summary_writer.add_scalar(
-                'acc/val_acc', val_acc * 100, global_step=epoch)
+                'acc/val_acc', val_recall * 100, global_step=epoch)
 
             state = {'epoch': epoch, 'model_state_dict': model.state_dict(),
                      'optimizer_state_dict': optimizer.state_dict()}

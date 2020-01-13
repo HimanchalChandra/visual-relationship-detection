@@ -1,6 +1,6 @@
 import torch
 from torch import nn
-from models import resnet, vgg, vs_sw
+from models import resnet, vgg, vs_sw, mfurln
 
 
 def generate_model(opt):
@@ -8,11 +8,12 @@ def generate_model(opt):
     #     'resnet', 'preresnet', 'wideresnet', 'resnext', 'densenet'
     # ]
     if opt.model == 'resnet':
-        model = resnet.Net(num_classes=70)  
+        model = resnet.Net(opt.num_classes)  
     elif opt.model == 'vgg':
-        model = vgg.Net(num_classes=70) 
+        model = vgg.Net(opt.num_classes) 
     elif opt.model == 'vs_sw':
-        model = vs_sw.Net(num_classes=70) 
+        model = vs_sw.Net(opt.num_classes) 
+    elif opt.model == 'mfurln':
+        model = mfurln.Net(opt.num_classes) 
 
-        
     return model, model.parameters()
