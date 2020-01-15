@@ -101,7 +101,7 @@ class Net(nn.Module):
         self.fc2 = nn.Linear(100, 1)
 
         #self.fc1_bn = nn.BatchNorm1d(4096)
-        self.fc3 = nn.Linear(4096, 500)
+        self.fc3 = nn.Linear(1600, 500)
         self.fc4 = nn.Linear(500, num_classes)
 
     def forward(self, img, spatial_locations, word_vectors):
