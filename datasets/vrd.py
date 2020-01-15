@@ -93,7 +93,6 @@ class VrdDataset(Dataset):
 					ymin_unioned), int(xmax_unioned), int(ymax_unioned)))
 				cropped_img = self.transform(cropped_img)
 				cropped_imgs.append(cropped_img)
-				print(len(cropped_imgs))
 
 				# prepare  spatial locations
 				sub_xmin = sub_bbox[0]
