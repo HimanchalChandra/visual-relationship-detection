@@ -39,7 +39,7 @@ def train(model, loader, criterion, optimizer, epoch, device, opt):
         metric.update(predicates, targets_predicates)
 
         optimizer.zero_grad()
-        train_loss.backward()
+        tot_loss.backward()
         optimizer.step()
 
         # show information
