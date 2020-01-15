@@ -82,7 +82,7 @@ class VrdDataset(Dataset):
 
 				if sub_label == obj_label and sub_bbox == obj_bbox:
 					continue
-
+				print("#%#$%$#")
 				# takes union of sub and obj
 				polygons = [box(sub_bbox[0], sub_bbox[1], sub_bbox[2], sub_bbox[3]),
 								box(obj_bbox[0], obj_bbox[1], obj_bbox[2], obj_bbox[3])]
