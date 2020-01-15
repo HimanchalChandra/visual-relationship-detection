@@ -82,7 +82,6 @@ class VrdDataset(Dataset):
 
 				if sub_label == obj_label and sub_bbox == obj_bbox:
 					continue
-				print("#%#$%$#")
 				# takes union of sub and obj
 				polygons = [box(sub_bbox[0], sub_bbox[1], sub_bbox[2], sub_bbox[3]),
 								box(obj_bbox[0], obj_bbox[1], obj_bbox[2], obj_bbox[3])]
@@ -94,6 +93,7 @@ class VrdDataset(Dataset):
 					ymin_unioned), int(xmax_unioned), int(ymax_unioned)))
 				cropped_img = self.transform(cropped_img)
 				cropped_imgs.append(cropped_img)
+				print(len(cropped_imgs))
 
 				# prepare  spatial locations
 				sub_xmin = sub_bbox[0]
@@ -149,6 +149,7 @@ class VrdDataset(Dataset):
 					predicate_list.append(predicate)
 					binary_targets.append(0)
 
+		print(len(cropped_imgs))
 		imgs = torch.stack(cropped_imgs)
 		spatial_locations = torch.Tensor(spatial_locations)
 		word_vectors = torch.Tensor(word_vectors)
