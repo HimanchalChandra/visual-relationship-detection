@@ -126,23 +126,23 @@ def main():
         train_loss, train_recall = train(
             model, train_loader, criterion, optimizer, epoch, device, opt)
         # scheduler.step(train_loss)
-        if (epoch) % opt.save_interval == 0:
-            val_loss, val_recall = validate(model, val_loader, criterion, epoch, device, opt)
-            # scheduler.step(val_loss)
-            # write summary
-            summary_writer.add_scalar(
-                'losses/train_loss', train_loss, global_step=epoch)
-            summary_writer.add_scalar(
-                'losses/val_loss', val_loss, global_step=epoch)
-            summary_writer.add_scalar(
-                'acc/train_acc', train_recall * 100, global_step=epoch)
-            summary_writer.add_scalar(
-                'acc/val_acc', val_recall * 100, global_step=epoch)
+        # if (epoch) % opt.save_interval == 0:
+        #     val_loss, val_recall = validate(model, val_loader, criterion, epoch, device, opt)
+        #     # scheduler.step(val_loss)
+        #     # write summary
+        #     summary_writer.add_scalar(
+        #         'losses/train_loss', train_loss, global_step=epoch)
+        #     summary_writer.add_scalar(
+        #         'losses/val_loss', val_loss, global_step=epoch)
+        #     summary_writer.add_scalar(
+        #         'acc/train_acc', train_recall * 100, global_step=epoch)
+        #     summary_writer.add_scalar(
+        #         'acc/val_acc', val_recall * 100, global_step=epoch)
 
-            state = {'epoch': epoch, 'model_state_dict': model.state_dict(),
-                     'optimizer_state_dict': optimizer.state_dict()}
-            torch.save(state, os.path.join('snapshots', f'model{epoch}.pth'))
-            print("Epoch {} model saved!\n".format(epoch))
+        #     state = {'epoch': epoch, 'model_state_dict': model.state_dict(),
+        #              'optimizer_state_dict': optimizer.state_dict()}
+        #     torch.save(state, os.path.join('snapshots', f'model{epoch}.pth'))
+        #     print("Epoch {} model saved!\n".format(epoch))
 
 
 if __name__ == "__main__":

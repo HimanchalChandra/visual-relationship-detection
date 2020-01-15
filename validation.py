@@ -24,7 +24,7 @@ def validate(model, loader, criterion, epoch, device, opt):
     accuracies = AverageMeter()
     metric = Metric(opt.num_classes)
     with torch.no_grad():
-        for i, (imgs, spatial_locations, word_vectors, targets_confidences, targets_predicates) in enumerate(loader):
+        for i, (imgs, spatial_locations, word_vectors, targets_predicates, targets_confidences) in enumerate(loader):
             # compute outputs
             imgs, spatial_locations, word_vectors, targets_confidences, targets_predicates = imgs.to(device), spatial_locations.to(
                 device), word_vectors.to(device),  targets_confidences.to(device), targets_predicates.to(device)
@@ -32,12 +32,14 @@ def validate(model, loader, criterion, epoch, device, opt):
 
             # compute loss
             loss = criterion(predicates, targets_predicates)
-            acc = calculate_accuracy(outputs, targets)
+            metric.update(predicates, targets_predicates)
+            #acc = calculate_accuracy(outputs, targets)
 
             losses.update(loss.item(), imgs.size(0))
-            metric.update()
+
 
     # show information
+    recall = metric.compute_metrics()
     print('Validation set ({:d} samples): Average loss: {:.4f}\tAcc: {:.4f}%'.format(losses.count, losses.avg, accuracies.avg * 100))
-    return losses.avg, accuracies.avg
+    return losses.avg, recall
 

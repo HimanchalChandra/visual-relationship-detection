@@ -96,7 +96,7 @@ class Net(nn.Module):
         self.fc_lm = self.fc1 = nn.Linear(500, 500)
         self.fc_sp = self.fc1 = nn.Linear(8, 500)
 
-        self.fc1 = nn.Linear(4125, 100)
+        self.fc1 = nn.Linear(1500, 100)
         #self.fc1_bn = nn.BatchNorm1d(4096)
         self.fc2 = nn.Linear(100, 1)
 
