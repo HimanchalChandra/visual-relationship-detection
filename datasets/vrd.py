@@ -180,6 +180,7 @@ class VrdDataset(Dataset):
 		# flatten
 		# targets = targets.view(-1)
 		# targets = targets.type(torch.LongTensor)
+		binary_targets = targets.view(-1,1)
 		return imgs, spatial_locations, word_vectors, predicates, binary_targets
 
 	def __getitem__(self, idx):
