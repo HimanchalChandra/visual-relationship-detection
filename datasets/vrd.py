@@ -23,9 +23,9 @@ def one_hot_encode(integer_encoding, num_classes):
 
 def make_image_list(dataset_path, type):
 	imgs_list = []
-	with open(os.path.join(dataset_path, 'json_dataset','annotations_{type}.json'), 'r') as f:
+	with open(os.path.join(dataset_path, 'json_dataset',f'annotations_{type}.json'), 'r') as f:
 		annotations = json.load(f)
-	sg_images = os.listdir(os.path.join(dataset_path,'sg_dataset','sg_{type}_images'))
+	sg_images = os.listdir(os.path.join(dataset_path,'sg_dataset',f'sg_{type}_images'))
 
 	annotations_copy = annotations.copy()
 	for ann in annotations.items():
