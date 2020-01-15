@@ -72,7 +72,6 @@ class VrdDataset(Dataset):
 		binary_targets = []
 
 		detection1 = detection.copy()
-		print(detection)
 		for sub in detection:
 			for obj in detection1:
 				sub_label = self.class2idx_obj[sub['label']]
@@ -148,7 +147,6 @@ class VrdDataset(Dataset):
 					predicate_list.append(predicate)
 					binary_targets.append(0)
 
-		print(cropped_imgs)
 		imgs = torch.stack(cropped_imgs)
 		spatial_locations = torch.Tensor(spatial_locations)
 		word_vectors = torch.Tensor(word_vectors)
