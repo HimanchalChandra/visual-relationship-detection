@@ -148,7 +148,7 @@ class VrdDataset(Dataset):
 					predicate_list.append(predicate)
 					binary_targets.append(0)
 
-		print(len(cropped_imgs))
+		print(cropped_imgs)
 		imgs = torch.stack(cropped_imgs)
 		spatial_locations = torch.Tensor(spatial_locations)
 		word_vectors = torch.Tensor(word_vectors)
