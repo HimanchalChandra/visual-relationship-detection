@@ -29,6 +29,9 @@ def train(model, loader, criterion, optimizer, epoch, device, opt):
             device), word_vectors.to(device),  targets_confidences.to(device), targets_predicates.to(device)
         confidences, predicates = model(imgs, spatial_locations, word_vectors)
 
+        print(confidences)
+        print("#%$#%")
+        print(targets_confidences)
         # compute loss
         loss1 = criterion(confidences, targets_confidences)
         loss2 = criterion(predicates, targets_predicates)
