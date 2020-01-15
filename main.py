@@ -19,12 +19,12 @@ import argparse
 from torch.optim import lr_scheduler
 import random
 import cv2
-from models.resnet import Net
 from training import train
 from util import Logger
 from validation import validate
 from opts import parse_opts
 from model import generate_model
+
 
 # model = vgg16(pretrained=True)
 # modules = list(model.children())[:-2]
