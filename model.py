@@ -14,7 +14,7 @@ def generate_model(opt):
     #     model = vgg.Net(opt.num_classes) 
     # elif opt.model == 'vs_sw':
     #     model = vs_sw.Net(opt.num_classes) 
-    elif opt.model == 'mfurln':
+    if opt.model == 'mfurln':
         model = mfurln.Net(opt.num_classes) 
 
     return model, model.parameters()
