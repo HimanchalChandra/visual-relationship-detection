@@ -29,14 +29,11 @@ def train(model, loader, criterion, optimizer, epoch, device, opt):
             device), word_vectors.to(device),  targets_confidences.to(device), targets_predicates.to(device)
         confidences, predicates = model(imgs, spatial_locations, word_vectors)
 
-        print(confidences)
-        print("#%$#%")
-        print(targets_confidences)
         # compute loss
         loss1 = criterion(confidences, targets_confidences)
         loss2 = criterion(predicates, targets_predicates)
         tot_loss = loss1 + loss2
-        train_loss += tot_loss.item()
+        train_loss += tot_loss
 
         losses.update(train_loss.item(), imgs.size(0))
         metric.update(predicates, targets_predicates)
