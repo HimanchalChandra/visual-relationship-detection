@@ -38,6 +38,10 @@ def train(model, loader, criterion, optimizer, epoch, device, opt):
         losses.update(train_loss.item(), imgs.size(0))
         metric.update(predicates, targets_predicates)
 
+
+        print(predicates)
+        print(targets_predicates)
+
         optimizer.zero_grad()
         tot_loss.backward()
         optimizer.step()
