@@ -33,9 +33,9 @@ def train(model, loader, criterion, optimizer, epoch, device, opt):
         loss1 = criterion(confidences, targets_confidences)
         loss2 = criterion(predicates, targets_predicates)
         tot_loss = loss1 + loss2
-        train_loss += tot_loss
+        train_loss += tot_loss.item()
 
-        losses.update(train_loss.item(), imgs.size(0))
+        losses.update(train_loss, imgs.size(0))
         predicates = torch.sigmoid(predicates)
         metric.update(predicates, targets_predicates)
 
