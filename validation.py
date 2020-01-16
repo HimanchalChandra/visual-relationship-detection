@@ -32,9 +32,8 @@ def validate(model, loader, criterion, epoch, device, opt):
 
             # compute loss
             loss = criterion(predicates, targets_predicates)
-            metric.update(predicates, targets_predicates)
-            #acc = calculate_accuracy(outputs, targets)
 
+            metric.update(predicates, targets_predicates)
             losses.update(loss.item(), imgs.size(0))
 
 
