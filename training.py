@@ -36,6 +36,7 @@ def train(model, loader, criterion, optimizer, epoch, device, opt):
         train_loss += tot_loss
 
         losses.update(train_loss.item(), imgs.size(0))
+        predicates = torch.sigmoid(predicates)
         metric.update(predicates, targets_predicates)
         recall = metric.compute_metrics()
 
