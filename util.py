@@ -1,6 +1,7 @@
 import csv
 from sklearn.metrics import recall_score
 import torch
+import numpy as np
 
 class AverageMeter(object):
     """Computes and stores the average and current value"""
@@ -83,6 +84,15 @@ class Metric:
         targets = torch.cat(self.gt)
         preds = preds.numpy()
         targets = targets.numpy()
+
+        preds = np.argmax(preds, axis=1)
+        # one hot encode
+        onehot_encoded = list()
+        for value in preds:
+            letter = [0 for _ in range(self.num_classes)]
+            letter[value] = 1
+            onehot_encoded.append(letter)
+        preds = np.array(onehot_encoded)
 
         recall = recall_score(targets, preds, average='micro')
         return recall
