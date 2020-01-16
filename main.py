@@ -86,9 +86,9 @@ def main():
 	model, parameters = generate_model(opt)
 	model = model.to(device)
 
-	# if torch.cuda.device_count() > 1:
-	#   	print("Let's use", torch.cuda.device_count(), "GPUs!")
-  	# 	model = nn.DataParallel(model)
+	if torch.cuda.device_count() > 1:
+	  	print("Let's use", torch.cuda.device_count(), "GPUs!")
+  		model = nn.DataParallel(model)
 
 	if opt.nesterov:
 		dampening = 0
