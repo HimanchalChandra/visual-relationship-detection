@@ -61,6 +61,7 @@ class LanguageModule(nn.Module):
 
     def forward(self, x):
         x = self.word_embeddings(x)
+        self.lstm.flatten_parameters()
         lstm_out, _ = self.lstm(x)
         x = lstm_out[:, -1, :]
         x = self.hidden2tag(x)
