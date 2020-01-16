@@ -125,7 +125,7 @@ class VrdDataset(Dataset):
 					sub_bbox_gt = sub_pred_obj['subject']['bbox']
 					obj_bbox_gt = sub_pred_obj['object']['bbox']
 					# convert to x1, y1, x2, y2
-					sub_bbox_gt = sub_bbox_gt[2], sub_bbox_gt[0], sub_bbox_gt[3], sub_bbox_gt[1]
+					sub_bbox_gt = [sub_bbox_gt[2], sub_bbox_gt[0], sub_bbox_gt[3], sub_bbox_gt[1]]
 					obj_bbox_gt = [obj_bbox_gt[2], obj_bbox_gt[0], obj_bbox_gt[3], obj_bbox_gt[1]]
 
 					# calculates iou of detections and gt for sub and obj.
@@ -155,10 +155,47 @@ class VrdDataset(Dataset):
 				sub_bbox_gt = sub_pred_obj['subject']['bbox']
 				obj_bbox_gt = sub_pred_obj['object']['bbox']
 				# convert to x1, y1, x2, y2
-				sub_bbox_gt = sub_bbox_gt[2], sub_bbox_gt[0], sub_bbox_gt[3], sub_bbox_gt[1]
+				sub_bbox_gt = [sub_bbox_gt[2], sub_bbox_gt[0], sub_bbox_gt[3], sub_bbox_gt[1]]
 				obj_bbox_gt = [obj_bbox_gt[2], obj_bbox_gt[0], obj_bbox_gt[3], obj_bbox_gt[1]]
 
+				# takes union of sub and obj
+				polygons = [box(sub_bbox_gt[0], sub_bbox_gt[1], sub_bbox_gt[2], sub_bbox_gt[3]),
+								box(obj_bbox_gt[0], obj_bbox_gt[1], obj_bbox_gt[2], obj_bbox_gt[3])]
+				unioned = cascaded_union(polygons)
+				unioned = unioned.bounds
+				xmin_unioned, ymin_unioned, xmax_unioned, ymax_unioned = unioned
+				# crop image
+				cropped_img = img.crop((int(xmin_unioned), int(
+					ymin_unioned), int(xmax_unioned), int(ymax_unioned)))
+				cropped_img = self.transform(cropped_img)
+				cropped_imgs.append(cropped_img)
+
+				# prepare  spatial locations
+				sub_xmin = sub_bbox_gt[0]
+				sub_ymin = sub_bbox_gt[1]
+				sub_xmax = sub_bbox_gt[2]
+				sub_ymax = sub_bbox_gt[3]
+				obj_xmin = obj_bbox_gt[0]
+				obj_ymin = obj_bbox_gt[1]
+				obj_xmax = obj_bbox_gt[2]
+				obj_ymax = obj_bbox_gt[3]
+
+				sub_x1 = int((sub_xmin - xmin_unioned)/(xmax_unioned - xmin_unioned))
+				sub_y1 = int((sub_ymin - ymin_unioned)/(ymax_unioned - ymin_unioned))
+				sub_x2 = int((sub_xmax - xmax_unioned)/(xmax_unioned - xmin_unioned))
+				sub_y2 = int((sub_ymax - ymax_unioned)/(ymax_unioned - ymin_unioned))
+
+				obj_x1 = int((obj_xmin - xmin_unioned)/(xmax_unioned - xmin_unioned))
+				obj_y1 = int((obj_ymin - ymin_unioned)/(ymax_unioned - ymin_unioned))
+				obj_x2 = int((obj_xmax - xmax_unioned)/(xmax_unioned - xmin_unioned))
+				obj_y2 = int((obj_ymax - ymax_unioned)/(ymax_unioned - ymin_unioned))
+
+				spatial_locations.append([sub_x1, sub_y1, sub_x2, sub_y2, obj_x1, obj_y1, obj_x2, obj_y2])
+
+				# prepare word vectors
+				word_vectors.append([sub_label, obj_label])
 				
+				# prepare predicates
 				predicate = sub_pred_obj['predicate']
 				predicate = one_hot_encode(predicate, self.num_classes)
 				predicate_list.append(predicate)
