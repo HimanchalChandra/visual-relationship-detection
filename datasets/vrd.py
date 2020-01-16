@@ -147,6 +147,24 @@ class VrdDataset(Dataset):
 					predicate_list.append(predicate)
 					binary_targets.append(0)
 
+
+		if not cropped_imgs:
+			for sub_pred_obj in annotation:
+				sub_label_gt = sub_pred_obj['subject']['category']
+				obj_label_gt = sub_pred_obj['object']['category']
+				sub_bbox_gt = sub_pred_obj['subject']['bbox']
+				obj_bbox_gt = sub_pred_obj['object']['bbox']
+				# convert to x1, y1, x2, y2
+				sub_bbox_gt = sub_bbox_gt[2], sub_bbox_gt[0], sub_bbox_gt[3], sub_bbox_gt[1]
+				obj_bbox_gt = [obj_bbox_gt[2], obj_bbox_gt[0], obj_bbox_gt[3], obj_bbox_gt[1]]
+
+				
+				predicate = sub_pred_obj['predicate']
+				predicate = one_hot_encode(predicate, self.num_classes)
+				predicate_list.append(predicate)
+				binary_targets.append(1)
+			
+
 		imgs = torch.stack(cropped_imgs)
 		spatial_locations = torch.Tensor(spatial_locations)
 		word_vectors = torch.Tensor(word_vectors)

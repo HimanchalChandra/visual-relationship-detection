@@ -46,6 +46,10 @@ python predict.py --dataset_path ./data/vrd --glove_path ./data/glove.6B/glove.6
 9) person on bike ,score:0.9804078735580444
 
 
+TO DO
+give annotations if detections are empty 
+
+
 ## Reference
 Visual Relationship Detection with Language prior and Softmax
 https://arxiv.org/abs/1904.07798
