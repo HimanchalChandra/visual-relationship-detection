@@ -87,9 +87,9 @@ class VisionModule(nn.Module):
         return x
 
 
-class Net(nn.Module):
+class MFURLN(nn.Module):
     def __init__(self, num_classes=10):
-        super(Net, self).__init__()
+        super(MFURLN, self).__init__()
         self.visual_module = VisionModule()
         self.language_module = LanguageModule(300, 500)
 

@@ -1,7 +1,6 @@
 import torch
 from torch import nn
-# from models import resnet, vgg, vs_sw, mfurln
-from models import mfurln
+from models import MFURLN
 
 
 def generate_model(opt):
@@ -15,6 +14,6 @@ def generate_model(opt):
     # elif opt.model == 'vs_sw':
     #     model = vs_sw.Net(opt.num_classes) 
     if opt.model == 'mfurln':
-        model = mfurln.Net(opt.num_classes) 
+        model = MFURLN(opt.num_classes) 
 
     return model, model.parameters()
