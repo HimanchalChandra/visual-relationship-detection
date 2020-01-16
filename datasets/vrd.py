@@ -193,7 +193,7 @@ class VrdDataset(Dataset):
 				spatial_locations.append([sub_x1, sub_y1, sub_x2, sub_y2, obj_x1, obj_y1, obj_x2, obj_y2])
 
 				# prepare word vectors
-				word_vectors.append([sub_label, obj_label])
+				word_vectors.append([sub_label_gt, obj_label_gt])
 				
 				# prepare predicates
 				predicate = sub_pred_obj['predicate']
