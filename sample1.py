@@ -1,22 +1,10 @@
-import torch
-from torchvision import transforms, utils
-import numpy as np
+from utils.util import calc_iou
 
 
-class Scale(object):
-    """Feature Scaling"""
-
-    def __call__(self, sample):
-        sample = sample/224
-        return sample
+obj_bbox_gt = 1, 2, 3, 4
 
 
-scale = Scale()
-        
-a = torch.Tensor([224,0])
-print(scale(a))
+print(obj_bbox_gt)
 
-
-a = [1,2,3]
-a = [i/ 3 for i in a]
-print(a)
+iou = calc_iou([1,2,3,4],obj_bbox_gt)
+print(iou)
