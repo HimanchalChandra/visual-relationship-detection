@@ -73,10 +73,10 @@ def main():
 
     # data loaders
     train_dataset = get_dataset(opt, 'train', transform=train_transform)
-    train_loader = DataLoader(train_dataset, batch_size=2, shuffle=True,
+    train_loader = DataLoader(train_dataset, batch_size=opt.batch_size, shuffle=True,
                               num_workers=2, collate_fn=train_dataset.my_collate)
     val_dataset = get_dataset(opt, 'test', transform=test_transform)
-    val_loader = DataLoader(val_dataset, batch_size=2, shuffle=True,
+    val_loader = DataLoader(val_dataset, batch_size=opt.batch_size, shuffle=True,
                             num_workers=2, collate_fn=val_dataset.my_collate)
 
     print(f'Number of training examples: {len(train_loader.dataset)}')
