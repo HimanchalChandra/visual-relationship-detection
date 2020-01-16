@@ -1,6 +1,6 @@
 import csv
 from sklearn.metrics import recall_score
-
+import torch
 
 class AverageMeter(object):
     """Computes and stores the average and current value"""
