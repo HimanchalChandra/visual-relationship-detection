@@ -98,7 +98,7 @@ class VrdDataset(Dataset):
 		bbox_obj_scaled = [obj_x1//factor_w, obj_y1 //
 							factor_h, obj_x2//factor_w, obj_y2//factor_h]
 
-		rois = {'sub': torch.Tensor([bbox_sub_scaled]), 'obj':torch.Tensor([bbox_obj_scaled])}
+		rois = {'sub': torch.cuda.FloatTensor([bbox_sub_scaled]), 'obj': torch.cuda.FloatTensor([bbox_obj_scaled])}
 		return rois
 
 
