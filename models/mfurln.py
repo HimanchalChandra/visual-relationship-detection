@@ -143,7 +143,7 @@ class MFURLN(nn.Module):
 
 	def forward(self, img, spatial_locations, word_vectors, rois):
     	print("1####")
-		print(x.size())
+		print(img.size())
 		vm_out = self.visual_module(img, rois)
 		lm_out = self.language_module(word_vectors)
 
