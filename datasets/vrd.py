@@ -131,6 +131,10 @@ class VrdDataset(Dataset):
 				cropped_img = self.transform(cropped_img)
 				cropped_imgs.append(cropped_img)
 
+				img_w, img_h = cropped_img.size
+				factor_h = img_h/224
+				factor_w = img_w/224
+
 				# prepare  spatial locations
 				sub_xmin = sub_bbox[0]
 				sub_ymin = sub_bbox[1]
