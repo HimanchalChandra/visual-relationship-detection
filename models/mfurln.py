@@ -80,7 +80,7 @@ class VisionModule(nn.Module):
 		self.resnet_backbone = nn.Sequential(*modules)
 		self.fc = nn.Linear(512, 4096)
 
-	def forward(self, x, _, _):
+	def forward(self, x, x1, x2):
 		x = self.resnet_backbone(x)
 		x = x.view(x.size(0), -1)
 		x = self.fc(x)
