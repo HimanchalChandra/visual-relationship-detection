@@ -276,14 +276,13 @@ class VrdDataset(Dataset):
 			# remove incomplete annotations
 			if (len(item[0].shape) == 4):
 				imgs.append(item[0])
-				print(len(imgs))
 				spatial_locations.append(item[1])
 				word_vectors.append(item[2])
 				predicates.append(item[3])
 				binary_targets.append(item[4])
 				rois_sub += item[5]
 				rois_obj += item[6]
-				print(len(rois_obj))
+			
 
 		imgs = torch.cat(imgs)
 		spatial_locations = torch.cat(spatial_locations)
@@ -292,6 +291,9 @@ class VrdDataset(Dataset):
 		predicates = torch.cat(predicates)
 		binary_targets = torch.cat(binary_targets)
 		rois = [rois_sub, rois_obj]
+
+		print(len([0]))
+		print(imgs.shape)
 
 		# flatten
 		# targets = targets.view(-1)
