@@ -159,7 +159,6 @@ def main():
 
 			# apply mask for thresholding
 			mask = scores > 0.95
-
 			preds = preds[mask]
 			scores = scores[mask]
 			mask1 = torch.cat([mask,mask], dim=1)
@@ -170,22 +169,24 @@ def main():
 			# spatial_locations = spatial_locations[mask2]
 			# spatial_locations = spatial_locations.view(-1,11)
 
+			draw = img_bgr.copy()
+			draw = np.array(draw)
 
-			# save results
-			for k,img in enumerate(imgs):
-				img = transforms.ToPILImage()(img)
-				score, pred = outputs[k].max(dim=0, keepdim=True) # get the index of the max log-probability
-				print(score)
-				if (score.item() > 0.95):
-					bboxes = spatial_locations1[k]
-					draw1 = ImageDraw.Draw(img)
-					draw1.rectangle(((int(bboxes[1].item()), int(bboxes[2].item())), (int(bboxes[3].item()), int(bboxes[4].item()))))
-					draw1.rectangle(((int(bboxes[5].item()), int(bboxes[6].item())), (int(bboxes[7].item()), int(bboxes[8].item()))))
-					print(int(bboxes[1].item()), int(bboxes[2].item()), int(bboxes[3].item()), int(bboxes[4].item()))
-					print(int(bboxes[5].item()), int(bboxes[6].item()), int(bboxes[7].item()), int(bboxes[8].item()))
-					#cv2.rectangle(img, (int(sub_obj[0].item()), int(sub_obj[1].item())), (int(sub_obj[2].item()), int(sub_obj[3].item())), (255,0,0), 2)
-					img.save(f'results/{str(j)}.jpg')
-					j+=1
+			# # save results
+			# for k,img in enumerate(imgs):
+			# 	img = transforms.ToPILImage()(img)
+			# 	score, pred = outputs[k].max(dim=0, keepdim=True) # get the index of the max log-probability
+			# 	print(score)
+			# 	if (score.item() > 0.95):
+			# 		bboxes = spatial_locations1[k]
+			# 		draw1 = ImageDraw.Draw(img)
+			# 		draw1.rectangle(((int(bboxes[1].item()), int(bboxes[2].item())), (int(bboxes[3].item()), int(bboxes[4].item()))))
+			# 		draw1.rectangle(((int(bboxes[5].item()), int(bboxes[6].item())), (int(bboxes[7].item()), int(bboxes[8].item()))))
+			# 		print(int(bboxes[1].item()), int(bboxes[2].item()), int(bboxes[3].item()), int(bboxes[4].item()))
+			# 		print(int(bboxes[5].item()), int(bboxes[6].item()), int(bboxes[7].item()), int(bboxes[8].item()))
+			# 		#cv2.rectangle(img, (int(sub_obj[0].item()), int(sub_obj[1].item())), (int(sub_obj[2].item()), int(sub_obj[3].item())), (255,0,0), 2)
+			# 		img.save(f'results/{str(j)}.jpg')
+			# 		j+=1
 
 
 			# # save results
