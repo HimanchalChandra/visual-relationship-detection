@@ -228,6 +228,8 @@ def main():
 
 			
 			cv2.imwrite(f'./outputs/{img_name}', draw)
+		except:
+			continue
 		
 			
 	
