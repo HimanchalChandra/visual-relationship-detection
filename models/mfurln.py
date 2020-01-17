@@ -97,13 +97,15 @@ class VisionModule(nn.Module):
 		modules = list(vgg.children())[:-1]
 		self.vgg_backbone = nn.Sequential(*modules)
 		self.roi_pool = ops.RoIPool(output_size=(7, 7), spatial_scale=0.03125)
+		self.fc = nn.Linear(512, 4096)
 
 	def forward(self, x, rois):
-		x = self.resnet_backbone(x)
+		x = self.vgg_backbone(x)
 		x_sub = self.roi_pool(x, rois[0])
 		x_obj = self.roi_pool(x, rois[1])
 		x = torch.cat([x, x_sub, x_obj], dim=1)
 		x = x.view(x.size(0), -1)
+		print(x.size())
 		x = self.fc(x)
 		x = F.relu(x)
 		return x
