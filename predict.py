@@ -16,7 +16,7 @@ import torch.nn as nn
 import argparse
 import random
 import cv2
-from models.resnet import Net
+from models import MFURLN
 from shapely.geometry import box
 from shapely.ops import cascaded_union
 from retinanet.obj_det_retinanet import ObjDetRetinanet
@@ -73,12 +73,12 @@ def main():
 
 
 	# define model
-	model = Net(num_classes=70)
+	model = MFURLN(num_classes=70)
 	model = model.to(device)
 
 
 	# load pretrained weights
-	checkpoint = torch.load('./snapshots/resnet_model655.pth', map_location='cpu')
+	checkpoint = torch.load('/Users/pranoyr/Desktop/model26.pth', map_location='cpu')
 	model.load_state_dict(checkpoint['model_state_dict'])
 	print("Model Restored")
 
@@ -235,5 +235,5 @@ def main():
 	
 
 			
-	if __name__ == "__main__":
-		main()
+if __name__ == "__main__":
+	main()
