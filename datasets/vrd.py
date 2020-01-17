@@ -280,8 +280,8 @@ class VrdDataset(Dataset):
 				word_vectors.append(item[2])
 				predicates.append(item[3])
 				binary_targets.append(item[4])
-				rois_sub += item[4]
-				rois_obj += item[5]
+				rois_sub += item[5]
+				rois_obj += item[6]
 
 		imgs = torch.cat(imgs)
 		spatial_locations = torch.cat(spatial_locations)
