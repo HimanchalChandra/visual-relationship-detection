@@ -195,8 +195,34 @@ def main():
 	# 	j+=1
 
 	for i, pred in enumerate(preds):
+		bboxes = spatial_locations1[i]
+		centr_sub = ( int((bboxes[1].item()+ bboxes[3].item())/2) , int((bboxes[2].item()+ bboxes[4].item())/2) )
+		centr_obj = ( int((bboxes[5].item()+ bboxes[7].item())/2) , int((bboxes[6].item()+ bboxes[8].item())/2) )
+
+		lineThickness = 1
+		
+		cv2.line(draw, centr_sub, centr_obj, (0,255,0), lineThickness)
 		print(f'{i}) {int2word_obj[word_vectors[i][0].item()]} {int2word_pred[pred.item()]} {int2word_obj[word_vectors[i][1].item()]} ,score:{scores[i].item()}')
 		
+		if (i==5):
+			break
+
+		font = cv2.FONT_HERSHEY_SIMPLEX
+
+		predicate_point = ( int((centr_sub[0] + centr_obj[0])/2 ) , int((centr_sub[1] + centr_obj[1])/2 ) )
+
+		cv2.putText(draw, int2word_pred[pred.item()], predicate_point, font, .5,(255,255,255),1,cv2.LINE_AA)
+
+
+		font = cv2.FONT_HERSHEY_SIMPLEX
+		cv2.putText(draw, int2word_obj[word_vectors[i][0].item()], centr_sub, font, .5,(255,255,255),1,cv2.LINE_AA)
+		cv2.putText(draw, int2word_obj[word_vectors[i][1].item()], centr_obj, font, .5,(255,255,255),1,cv2.LINE_AA)
+
+		# cv2.putText(draw, int2word_obj[word_vectors[i][0].item()], centr_sub, font, .5,(255,255,255),1,cv2.LINE_AA)
+		# cv2.putText(draw, int2word_obj[word_vectors[i][1].item()], centr_obj, font, .5,(255,255,255),1,cv2.LINE_AA)
+
+	
+	cv2.imwrite(f'./outputs/{img_name}', draw)
    
 	
   
