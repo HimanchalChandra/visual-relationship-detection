@@ -100,8 +100,8 @@ class VisionModule(nn.Module):
 		self.fc = nn.Linear(512, 4096)
 
 	def forward(self, x, rois):
-		print(x.shape)
 		x = self.vgg_backbone(x)
+		print(rois[0])
 		x_sub = self.roi_pool(x, rois[0])
 		x_obj = self.roi_pool(x, rois[1])
 
