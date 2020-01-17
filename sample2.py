@@ -29,7 +29,7 @@ from opts import parse_opts
 
 # define model
 model = MFURLN(num_classes=70)
-model = model.to(device)
+model = model.to('cuda')
 
 
 # load pretrained weights
