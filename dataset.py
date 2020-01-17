@@ -5,7 +5,7 @@ def get_dataset(opt, type, transform):
     assert opt.dataset in ['vrd', 'visual_genome']
 
     if opt.dataset == 'vrd':
-        dataset = VrdDataset(opt.dataset_path, opt.num_classes, type, transform)
+        dataset = VrdDataset(opt.dataset_path, type, transform)
     # elif opt.dataset == 'activitynet':
     #     training_data = ActivityNet(
     #         opt.video_path,

@@ -19,11 +19,12 @@ from models import MFURLN
 
 # define model
 model = MFURLN(num_classes=70)
-model = model.to('cuda')
+model = model.to('cpu')
 model = nn.DataParallel(model)
 
+
 # load pretrained weights
-checkpoint = torch.load('./snapshots/model26.pth')
+checkpoint = torch.load('/Users/pranoyr/Desktop/model26.pth', map_location='cpu')
 model.load_state_dict(checkpoint['model_state_dict'])
 print("Model Restored")
 
