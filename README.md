@@ -1,4 +1,4 @@
-# On Exploring Undetermined Relationships for Visual Relationship Detection
+# Visual Relationship Detection
 
 ## Getting Started
 ### Prerequisites
@@ -30,6 +30,10 @@ python predict.py --dataset_path ./data/vrd --glove_path ./data/glove.6B/glove.6
 
 
 ```
+
+### Results
+![alt text](./images/8559246586_4bd43f9505_b.jpg)
+
 
 
 
