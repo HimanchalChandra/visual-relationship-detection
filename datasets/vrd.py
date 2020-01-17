@@ -69,6 +69,39 @@ class VrdDataset(Dataset):
 	def __len__(self):
 		return len(self.imgs_list)
 
+	def prepare_rois(self, sub_bbox, obj_bbox, unioned):
+		xmin_unioned, ymin_unioned, xmax_unioned, ymax_unioned = unioned
+
+		sub_xmin = sub_bbox[0]
+		sub_ymin = sub_bbox[1]
+		sub_xmax = sub_bbox[2]
+		sub_ymax = sub_bbox[3]
+		obj_xmin = obj_bbox[0]
+		obj_ymin = obj_bbox[1]
+		obj_xmax = obj_bbox[2]
+		obj_ymax = obj_bbox[3]
+
+		# find bounding box coordinates relative to unioned image
+		sub_x1 = sub_xmin - int(xmin_unioned)
+		sub_y1 = sub_ymin - int(ymin_unioned)
+		sub_x2 = sub_xmax - int(xmin_unioned)
+		sub_y2 = sub_ymax - int(ymin_unioned)
+
+		obj_x1 = obj_xmin - int(xmin_unioned)
+		obj_y1 = obj_ymin - int(ymin_unioned)
+		obj_x2 = obj_xmax - int(xmin_unioned)
+		obj_y2 = obj_ymax - int(ymin_unioned)
+
+		# rescaling of bboxes for image with dim (224,224)
+		bbox_sub_scaled = [sub_x1//factor_w, sub_y1 //
+							factor_h, sub_x2//factor_w, sub_y2//factor_h]
+		bbox_obj_scaled = [obj_x1//factor_w, obj_y1 //
+							factor_h, obj_x2//factor_w, obj_y2//factor_h]
+
+		rois = {'sub':bbox_sub_scaled, 'obj':bbox_obj_scaled}
+		return rois
+
+
 	def prepare_data(self, img, annotation, detection):
 		cropped_imgs = []
 		spatial_locations = []
@@ -119,6 +152,9 @@ class VrdDataset(Dataset):
 				obj_y2 = int((obj_ymax - ymax_unioned)/(ymax_unioned - ymin_unioned))
 
 				spatial_locations.append([sub_x1, sub_y1, sub_x2, sub_y2, obj_x1, obj_y1, obj_x2, obj_y2])
+
+				# prepare rois
+				rois = self.prepare_rois(sub_bbox, obj_bbox, unioned)
 
 				# prepare word vectors
 				word_vectors.append([sub_label, obj_label])
