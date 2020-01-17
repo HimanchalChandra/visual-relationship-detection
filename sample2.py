@@ -1,38 +1,39 @@
+import os
+import torch
+import pandas as pd
+from skimage import io, transform
 import numpy as np
+import matplotlib.pyplot as plt
+from torch.utils.data import Dataset, DataLoader
+from torchvision import transforms, utils
+import torch.optim as optim
+from torchvision.models import vgg16
+from PIL import Image, ImageFont, ImageDraw
+from dataset import VrdDataset
+import json
+import torch.nn as nn
+
+import argparse
+import random
 import cv2
-from utils.util import calc_intersection,calc_iou
-b1 = [25,25,25,25]
+from models import MFURLN
+from shapely.geometry import box
+from shapely.ops import cascaded_union
+from retinanet.obj_det_retinanet import ObjDetRetinanet
+from utils.util import calc_iou,calc_intersection
+from opts import parse_opts
+# model = vgg16(pretrained=True)
+# modules = list(model.children())[:-2]  
+# base_net = nn.Sequential(*modules)
 
 
-img = np.ones((720,1280,3))
+# define model
+model = MFURLN(num_classes=70)
+model = model.to(device)
 
 
-cv2.rectangle(img, (70, 70), (400, 400), (255,0,0), 2)
-cv2.rectangle(img, (210, 210), (300, 300), (255,0,0), 2)
+# load pretrained weights
+checkpoint = torch.load('./snapshots/model26.pth', map_location='cpu')
+model.load_state_dict(checkpoint['model_state_dict'])
+print("Model Restored")
 
-
-rect1center = ((int(70+200/2)), (int(70+200/2)))
-
-print(rect1center)
-
-cv2.line(img, rect1center, rect1center, (255,0,0), 2)
-
-# print(calc_intersection([70, 70, 200, 200], [210, 210, 300, 300] ))
-
-cv2.imshow('window', img)
-cv2.waitKey(0)
-
-# import torch
-# from torchvision import models
-# import torch.nn as nn
-# from collections import OrderedDict
-
-# model = models.resnet50(pretrained=True)
-# modules = list(model.children())[:-1]
-
-# modules += [nn.Linear(model.fc.in_features, 4096), nn.BatchNorm1d(4096), nn.ReLU(inplace=True)]
-# modules += [nn.Linear(4096, 70)]
-
-# model = nn.Sequential(*modules)
-
-# print(model)
