@@ -85,7 +85,7 @@ def main():
 	print("Model Restored")
 
 	for img_name in os.listdir('images'):
-		try:
+		# try:
 			img_rgb = Image.open(f'./images/{img_name}')
 			img_bgr = cv2.cvtColor(np.asarray(img_rgb), cv2.COLOR_RGB2BGR)
 			img_bgr = Image.fromarray(img_bgr)
@@ -140,7 +140,7 @@ def main():
 					spatial_locations1.append([sub_xmin, sub_ymin, sub_xmax, sub_ymax, obj_xmin, obj_ymin, obj_xmax, obj_ymax])
 
 					# prepare word vectors
-					word_vectors.append([sub_label, obj_label])
+					word_vectors.append([word2int_obj[sub_label], word2int_obj[obj_label]])
 			
 			imgs = torch.stack(cropped_imgs)
 			spatial_locations = torch.Tensor(spatial_locations)
@@ -167,6 +167,7 @@ def main():
 			
 
 			# apply mask for thresholding
+			# mask = scores > 0.2
 			mask = scores > 0.2
 			preds = preds[mask]
 			scores = scores[mask]
@@ -239,8 +240,8 @@ def main():
 
 			
 			cv2.imwrite(f'./outputs/{img_name}', draw)
-		except:
-			continue
+		# except:
+		# 	continue
 		
 			
 	

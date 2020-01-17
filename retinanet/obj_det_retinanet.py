@@ -32,7 +32,7 @@ class ObjDetRetinanet:
 
         # adjust this to point to your downloaded/trained model
         # models can be downloaded here: https://github.com/fizyr/keras-retinanet/releases
-        model_path = os.path.join(path, "snapshots", "resnet50_vrd_inference.h5")
+        model_path = os.path.join(path, "snapshots", "vrd_model.h5")
 
         # load retinanet model
         self.model = models.load_model(model_path, backbone_name="resnet50")
