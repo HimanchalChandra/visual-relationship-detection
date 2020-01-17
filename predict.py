@@ -76,6 +76,8 @@ def main():
 	model = MFURLN(num_classes=70)
 	model = model.to(device)
 
+	model = nn.DataParallel(model)
+
 
 	# load pretrained weights
 	checkpoint = torch.load('./snapshots/model26.pth', map_location='cpu')
@@ -109,7 +111,7 @@ def main():
 					unioned = unioned.bounds
 					xmin_unioned, ymin_unioned, xmax_unioned, ymax_unioned = unioned
 					# crop image
-					cropped_img = img.crop((int(xmin_unioned), int(
+					cropped_img = img_rgb.crop((int(xmin_unioned), int(
 						ymin_unioned), int(xmax_unioned), int(ymax_unioned)))
 					cropped_img = transform(cropped_img)
 					cropped_imgs.append(cropped_img)
@@ -156,7 +158,7 @@ def main():
 			scores, preds = outputs.max(dim=1, keepdim=True) # get the index of the max log-probability
 
 			# apply mask for thresholding
-			mask = scores > 0.95
+			mask = scores > 0.2
 			preds = preds[mask]
 			scores = scores[mask]
 
@@ -205,15 +207,15 @@ def main():
 
 			for i, pred in enumerate(preds):
 				bboxes = spatial_locations1[i]
-				centr_sub = ( int((bboxes[1].item()+ bboxes[3].item())/2) , int((bboxes[2].item()+ bboxes[4].item())/2) )
-				centr_obj = ( int((bboxes[5].item()+ bboxes[7].item())/2) , int((bboxes[6].item()+ bboxes[8].item())/2) )
+				centr_sub = ( int((bboxes[0].item()+ bboxes[2].item())/2) , int((bboxes[1].item()+ bboxes[3].item())/2) )
+				centr_obj = ( int((bboxes[4].item()+ bboxes[6].item())/2) , int((bboxes[5].item()+ bboxes[7].item())/2) )
 
 				lineThickness = 1
 				cv2.line(draw, centr_sub, centr_obj, (0,255,0), lineThickness)
 				print(f'{i}) {int2word_obj[word_vectors[i][0].item()]} {int2word_pred[pred.item()]} {int2word_obj[word_vectors[i][1].item()]} ,score:{scores[i].item()}')
 				
-				if (i==5):
-					break
+				# if (i==5):
+				# 	break
 
 				predicate_point = ( int((centr_sub[0] + centr_obj[0])/2 ) , int((centr_sub[1] + centr_obj[1])/2 ))
 
