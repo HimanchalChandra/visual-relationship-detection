@@ -139,18 +139,16 @@ def main():
 
 					# prepare word vectors
 					word_vectors.append([sub_label, obj_label])
-
 			
 			imgs = torch.stack(cropped_imgs)
 			spatial_locations = torch.Tensor(spatial_locations)
+			spatial_locations1 = torch.Tensor(spatial_locations1)
 			word_vectors = torch.Tensor(word_vectors)
 			word_vectors = word_vectors.type(torch.LongTensor)
 		
 			print(imgs.shape)
 			print(spatial_locations.shape)
 			print(word_vectors.shape)
-
-			
 
 			outputs = model(imgs, spatial_locations, word_vectors)
 
@@ -161,9 +159,14 @@ def main():
 			mask = scores > 0.95
 			preds = preds[mask]
 			scores = scores[mask]
+
 			mask1 = torch.cat([mask,mask], dim=1)
 			word_vectors = word_vectors[mask1]
 			word_vectors = word_vectors.view(-1,2)
+
+			mask2 = torch.cat([mask,mask,mask,mask,mask,mask,mask,mask], dim=1)
+			spatial_locations1 = spatial_locations1[mask2]
+			spatial_locations1 = spatial_locations1.view(-1,8)
 
 			# mask2 = torch.cat([mask,mask,mask,mask,mask,mask,mask,mask,mask,mask,mask], dim=1)
 			# spatial_locations = spatial_locations[mask2]
@@ -206,20 +209,16 @@ def main():
 				centr_obj = ( int((bboxes[5].item()+ bboxes[7].item())/2) , int((bboxes[6].item()+ bboxes[8].item())/2) )
 
 				lineThickness = 1
-				
 				cv2.line(draw, centr_sub, centr_obj, (0,255,0), lineThickness)
 				print(f'{i}) {int2word_obj[word_vectors[i][0].item()]} {int2word_pred[pred.item()]} {int2word_obj[word_vectors[i][1].item()]} ,score:{scores[i].item()}')
 				
 				if (i==5):
 					break
 
+				predicate_point = ( int((centr_sub[0] + centr_obj[0])/2 ) , int((centr_sub[1] + centr_obj[1])/2 ))
+
 				font = cv2.FONT_HERSHEY_SIMPLEX
-
-				predicate_point = ( int((centr_sub[0] + centr_obj[0])/2 ) , int((centr_sub[1] + centr_obj[1])/2 ) )
-
 				cv2.putText(draw, int2word_pred[pred.item()], predicate_point, font, .5,(255,255,255),1,cv2.LINE_AA)
-
-
 				font = cv2.FONT_HERSHEY_SIMPLEX
 				cv2.putText(draw, int2word_obj[word_vectors[i][0].item()], centr_sub, font, .5,(255,255,255),1,cv2.LINE_AA)
 				cv2.putText(draw, int2word_obj[word_vectors[i][1].item()], centr_obj, font, .5,(255,255,255),1,cv2.LINE_AA)
