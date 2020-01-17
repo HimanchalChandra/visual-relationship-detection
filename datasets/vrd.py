@@ -98,7 +98,7 @@ class VrdDataset(Dataset):
 		bbox_obj_scaled = [obj_x1//factor_w, obj_y1 //
 							factor_h, obj_x2//factor_w, obj_y2//factor_h]
 
-		rois = {'sub': torch.cuda.FloatTensor([bbox_sub_scaled]), 'obj': torch.cuda.FloatTensor([bbox_obj_scaled])}
+		rois = {'sub': torch.Tensor([bbox_sub_scaled]), 'obj': torch.Tensor([bbox_obj_scaled])}
 		return rois
 
 
@@ -262,6 +262,8 @@ class VrdDataset(Dataset):
 		word_vectors = torch.Tensor(word_vectors)
 		predicates = torch.Tensor(predicate_list)
 		binary_targets = torch.Tensor(binary_targets)
+		rois_sub = torch.stack(rois_sub)
+		rois_obj = torch.stack(rois_obj)
 		return imgs, spatial_locations, word_vectors, predicates, binary_targets, rois_sub, rois_obj
 
 	def my_collate(self, batch):
