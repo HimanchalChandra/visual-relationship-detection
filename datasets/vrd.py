@@ -98,7 +98,7 @@ class VrdDataset(Dataset):
 		bbox_obj_scaled = [obj_x1//factor_w, obj_y1 //
 							factor_h, obj_x2//factor_w, obj_y2//factor_h]
 
-		rois = {'sub':bbox_sub_scaled, 'obj':bbox_obj_scaled}
+		rois = {'sub': torch.Tensor([bbox_sub_scaled]), 'obj':torch.Tensor([bbox_obj_scaled])}
 		return rois
 
 
@@ -108,6 +108,8 @@ class VrdDataset(Dataset):
 		word_vectors = []
 		predicate_list = []
 		binary_targets = []
+		rois_sub = []
+		rois_obj = []
 
 		detection1 = detection.copy()
 		for sub in detection:
@@ -160,6 +162,8 @@ class VrdDataset(Dataset):
 
 				# prepare rois
 				rois = self.prepare_rois(sub_bbox, obj_bbox, unioned, factor_h, factor_w)
+				rois_sub.append(rois['sub'])
+				rois_obj.append(rois['obj'])
 
 				# prepare word vectors
 				word_vectors.append([sub_label, obj_label])
@@ -238,6 +242,11 @@ class VrdDataset(Dataset):
 
 				spatial_locations.append([sub_x1, sub_y1, sub_x2, sub_y2, obj_x1, obj_y1, obj_x2, obj_y2])
 
+				# prepare rois
+				rois = self.prepare_rois(sub_bbox, obj_bbox, unioned, factor_h, factor_w)
+				rois_sub.append(rois['sub'])
+				rois_obj.append(rois['obj'])
+
 				# prepare word vectors
 				word_vectors.append([sub_label_gt, obj_label_gt])
 				
@@ -253,7 +262,7 @@ class VrdDataset(Dataset):
 		word_vectors = torch.Tensor(word_vectors)
 		predicates = torch.Tensor(predicate_list)
 		binary_targets = torch.Tensor(binary_targets)
-		return imgs, spatial_locations, word_vectors, predicates, binary_targets
+		return imgs, spatial_locations, word_vectors, predicates, binary_targets, rois_sub, rois_obj
 
 	def my_collate(self, batch):
 		imgs = []
@@ -261,6 +270,8 @@ class VrdDataset(Dataset):
 		word_vectors = []
 		predicates = []
 		binary_targets = []
+		rois_sub = []
+		rois_obj = []
 		for item in batch:
 			# remove incomplete annotations
 			if (len(item[0].shape) == 4):
@@ -269,6 +280,8 @@ class VrdDataset(Dataset):
 				word_vectors.append(item[2])
 				predicates.append(item[3])
 				binary_targets.append(item[4])
+				rois_sub += item[4]
+				rois_obj += item[5]
 
 		imgs = torch.cat(imgs)
 		spatial_locations = torch.cat(spatial_locations)
@@ -276,12 +289,13 @@ class VrdDataset(Dataset):
 		word_vectors = word_vectors.type(torch.LongTensor)
 		predicates = torch.cat(predicates)
 		binary_targets = torch.cat(binary_targets)
+		rois = [rois_sub, rois_obj]
 
 		# flatten
 		# targets = targets.view(-1)
 		# targets = targets.type(torch.LongTensor)
 		binary_targets = binary_targets.view(-1,1)
-		return imgs, spatial_locations, word_vectors, predicates, binary_targets
+		return imgs, spatial_locations, word_vectors, predicates, binary_targets, rois
 
 	def __getitem__(self, idx):
 		img_path = os.path.join(self.root, self.imgs_list[idx])

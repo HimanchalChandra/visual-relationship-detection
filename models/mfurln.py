@@ -100,8 +100,8 @@ class VisionModule(nn.Module):
 
 	def forward(self, x, rois):
 		x = self.resnet_backbone(x)
-		x_sub = self.roi_pool(x, rois['sub'])
-		x_obj = self.roi_pool(x, rois['obj'])
+		x_sub = self.roi_pool(x, rois[0])
+		x_obj = self.roi_pool(x, rois[1])
 		x = torch.cat([x, x_sub, x_obj], dim=1)
 		x = x.view(x.size(0), -1)
 		x = self.fc(x)
@@ -128,8 +128,8 @@ class MFURLN(nn.Module):
 		self.fc3 = nn.Linear(1600, 500)
 		self.fc4 = nn.Linear(500, num_classes)
 
-	def forward(self, img, spatial_locations, word_vectors):
-		vm_out = self.visual_module(img)
+	def forward(self, img, spatial_locations, word_vectors, rois):
+		vm_out = self.visual_module(img, rois)
 		lm_out = self.language_module(word_vectors)
 
 		vm_out = vm_out.view(vm_out.size(0), -1)
