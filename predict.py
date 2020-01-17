@@ -152,10 +152,19 @@ def main():
 			print(spatial_locations.shape)
 			print(word_vectors.shape)
 
-			outputs = model(imgs, spatial_locations, word_vectors)
+			confidences, predicates = model(imgs, spatial_locations, word_vectors)
+			confidences = torch.sigmoid(confidences)
+			predicates = torch.sigmoid(predicates)
 
-			outputs = torch.softmax(outputs, dim=1)
-			scores, preds = outputs.max(dim=1, keepdim=True) # get the index of the max log-probability
+			print("confidences")
+			print(confidences.t())
+
+			scores, preds = predicates.max(dim=1, keepdim=True) # get the index of the max log-probability
+
+			print("prdicate scores")
+			print(scores.t())
+
+			
 
 			# apply mask for thresholding
 			mask = scores > 0.2
