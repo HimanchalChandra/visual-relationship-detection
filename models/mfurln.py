@@ -107,6 +107,10 @@ class VisionModule(nn.Module):
 		x = x.view(x.size(0), -1)
 		x_sub = x_sub.view(x_sub.size(0), -1)
 		x_obj = x_obj.view(x_obj.size(0), -1)
+
+		print(x.shape)
+		print(x_sub.shape)
+		print(x_obj.shape)
 		
 		x = torch.cat([x, x_sub, x_obj], dim=1)
 		print(x.size())
