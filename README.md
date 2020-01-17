@@ -32,7 +32,7 @@ python predict.py --dataset_path ./data/vrd --glove_path ./data/glove.6B/glove.6
 ```
 
 ### Results
-![alt text](./images/8559246586_4bd43f9505_b.jpg)
+![alt text](./outputs/sf.jpg)
 
 
 1) wheel next to person ,score:0.7031404376029968
