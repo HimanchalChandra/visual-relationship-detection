@@ -1,15 +1,19 @@
 import torch
 from torch import nn
-from models import resnet,vgg
+from models import MFURLN
 
 
 def generate_model(opt):
     # assert opt.model in [
     #     'resnet', 'preresnet', 'wideresnet', 'resnext', 'densenet'
     # ]
-    if opt.model == 'resnet':
-        model = resnet.Net(num_classes=70)  
-    elif opt.model == 'vgg':
-        model = vgg.Net(num_classes=70) 
-        
+    # if opt.model == 'resnet':
+    #     model = resnet.Net(opt.num_classes)  
+    # elif opt.model == 'vgg':
+    #     model = vgg.Net(opt.num_classes) 
+    # elif opt.model == 'vs_sw':
+    #     model = vs_sw.Net(opt.num_classes) 
+    if opt.model == 'mfurln':
+        model = MFURLN(opt.num_classes) 
+
     return model, model.parameters()

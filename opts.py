@@ -41,6 +41,10 @@ def parse_opts():
 						default="/home/neuroplex/glove.6B/glove.6B.300d.txt", help="Path to glove word embeddings")
 	parser.add_argument("--dataset", type=str,
 						default="vrd", help="Dataset name")
+	parser.add_argument("--model", type=str,
+						default="resnet", help="Model name")
+	parser.add_argument("--num_classes", type=int,
+						 help="Number of classes")
 	parser.add_argument(
 		'--lr_patience',
 		default=10,

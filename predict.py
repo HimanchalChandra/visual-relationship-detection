@@ -75,15 +75,27 @@ def main():
 	# define model
 	model = MFURLN(num_classes=70)
 	model = model.to(device)
+<<<<<<< HEAD
+=======
+
+>>>>>>> v2
 	model = nn.DataParallel(model)
 
 
 	# load pretrained weights
+<<<<<<< HEAD
 	checkpoint = torch.load('/Users/pranoyr/Desktop/model26.pth', map_location='cpu')
+=======
+	checkpoint = torch.load('./snapshots/model26.pth', map_location='cpu')
+>>>>>>> v2
 	model.load_state_dict(checkpoint['model_state_dict'])
 	print("Model Restored")
 
 	for img_name in os.listdir('images'):
+<<<<<<< HEAD
+=======
+		# try:
+>>>>>>> v2
 			img_rgb = Image.open(f'./images/{img_name}')
 			img_bgr = cv2.cvtColor(np.asarray(img_rgb), cv2.COLOR_RGB2BGR)
 			img_bgr = Image.fromarray(img_bgr)
@@ -151,6 +163,7 @@ def main():
 			print(word_vectors.shape)
 
 			confidences, predicates = model(imgs, spatial_locations, word_vectors)
+<<<<<<< HEAD
 			confidences= torch.sigmoid(confidences)
 			print("Confidences")
 			print(confidences.t())
@@ -161,6 +174,24 @@ def main():
 			print(scores.t())
 			# apply mask for thresholding
 			mask = scores > 0.2
+=======
+			confidences = torch.sigmoid(confidences)
+			predicates = torch.sigmoid(predicates)
+
+			print("confidences")
+			print(confidences.t())
+
+			scores, preds = predicates.max(dim=1, keepdim=True) # get the index of the max log-probability
+
+			print("prdicate scores")
+			print(scores.t())
+
+			
+
+			# apply mask for thresholding
+			# mask = scores > 0.2
+			mask = scores > 0.5
+>>>>>>> v2
 			preds = preds[mask]
 			scores = scores[mask]
 
@@ -206,6 +237,10 @@ def main():
 			# 	draw1.rectangle(((int(sub_obj[5].item()), int(sub_obj[6].item())), (int(sub_obj[7].item()), int(sub_obj[8].item()))))
 			# 	img.save(f'results/{str(j)}.jpg')
 			# 	j+=1
+<<<<<<< HEAD
+=======
+
+>>>>>>> v2
 			for i, pred in enumerate(preds):
 				bboxes = spatial_locations1[i]
 				centr_sub = ( int((bboxes[0].item()+ bboxes[2].item())/2) , int((bboxes[1].item()+ bboxes[3].item())/2) )
@@ -231,7 +266,12 @@ def main():
 
 			
 			cv2.imwrite(f'./outputs/{img_name}', draw)
+<<<<<<< HEAD
 		
+=======
+		# except:
+		# 	continue
+>>>>>>> v2
 		
 			
 	
