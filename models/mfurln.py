@@ -5,6 +5,7 @@ import json
 import numpy as np
 import torch.nn.functional as F
 from opts import parse_opts
+import torchvision.ops as ops
 import os
 
 opt = parse_opts()
@@ -69,22 +70,44 @@ class LanguageModule(nn.Module):
 		return x
 
 
+# class VisionModule(nn.Module):
+# 	""" Vision Moddule"""
+
+# 	def __init__(self):
+# 		super(VisionModule, self).__init__()
+# 		resnet = models.resnet18(pretrained=True)
+# 		modules = list(resnet.children())[:-1]
+# 		self.resnet_backbone = nn.Sequential(*modules)
+# 		self.fc = nn.Linear(512, 4096)
+
+# 	def forward(self, x):
+# 		x = self.resnet_backbone(x)
+# 		x = x.view(x.size(0), -1)
+# 		x = self.fc(x)
+# 		x = F.relu(x)
+# 		return x
+
+
 class VisionModule(nn.Module):
 	""" Vision Moddule"""
 
 	def __init__(self):
 		super(VisionModule, self).__init__()
-		resnet = models.resnet18(pretrained=True)
-		modules = list(resnet.children())[:-1]
-		self.resnet_backbone = nn.Sequential(*modules)
-		self.fc = nn.Linear(512, 4096)
+		vgg = models.vgg16(pretrained=True)
+		modules = list(vgg.children())[:-1]
+		self.vgg_backbone = nn.Sequential(*modules)
+		self.roi_pool = ops.RoIPool(output_size=(7, 7), spatial_scale=0.03125)
 
-	def forward(self, x):
+	def forward(self, x, rois):
 		x = self.resnet_backbone(x)
+		x_sub = self.roi_pool(x, rois['sub'])
+		x_obj = self.roi_pool(x, rois['obj'])
+		x = torch.cat([x, x_sub, x_obj], dim=1)
 		x = x.view(x.size(0), -1)
 		x = self.fc(x)
 		x = F.relu(x)
 		return x
+
 
 
 class MFURLN(nn.Module):
