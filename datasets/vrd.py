@@ -232,7 +232,7 @@ class VrdDataset(Dataset):
 		imgs = torch.cat(imgs)
 		spatial_locations = torch.cat(spatial_locations)
 		word_vectors = torch.cat(word_vectors)
-		#word_vectors = word_vectors.type(torch.LongTensor)
+		word_vectors = word_vectors.type(torch.LongTensor)
 		predicates = torch.cat(predicates)
 		binary_targets = torch.cat(binary_targets)
 
