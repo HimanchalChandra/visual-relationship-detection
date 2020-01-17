@@ -163,24 +163,6 @@ def main():
 			print(word_vectors.shape)
 
 			confidences, predicates = model(imgs, spatial_locations, word_vectors)
-<<<<<<< HEAD
-			confidences = torch.sigmoid(confidences)
-			predicates = torch.sigmoid(predicates)
-
-			print("confidences")
-			print(confidences.t())
-
-			scores, preds = predicates.max(dim=1, keepdim=True) # get the index of the max log-probability
-
-			print("prdicate scores")
-			print(scores.t())
-
-			
-
-			# apply mask for thresholding
-			# mask = scores > 0.2
-			mask = scores > 0.5
-=======
 			confidences= torch.sigmoid(confidences)
 			print("Confidences")
 			print(confidences.t())
@@ -191,7 +173,6 @@ def main():
 			print(scores.t())
 			# apply mask for thresholding
 			mask = scores > 0.2
->>>>>>> master
 			preds = preds[mask]
 			scores = scores[mask]
 
