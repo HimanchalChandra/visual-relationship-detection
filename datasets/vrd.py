@@ -296,8 +296,6 @@ class VrdDataset(Dataset):
 		# targets = targets.view(-1)
 		# targets = targets.type(torch.LongTensor)
 		binary_targets = binary_targets.view(-1,1)
-		print("####")
-		print(imgs.shape)
 		return imgs, spatial_locations, word_vectors, predicates, binary_targets, rois
 
 	def __getitem__(self, idx):

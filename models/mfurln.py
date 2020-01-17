@@ -100,6 +100,7 @@ class VisionModule(nn.Module):
 		self.fc = nn.Linear(512, 4096)
 
 	def forward(self, x, rois):
+    	print("####")
 		print(x.size())
 		x = self.vgg_backbone(x)
 		x_sub = self.roi_pool(x, rois[0])
@@ -141,6 +142,8 @@ class MFURLN(nn.Module):
 		self.fc4 = nn.Linear(500, num_classes)
 
 	def forward(self, img, spatial_locations, word_vectors, rois):
+    	print("1####")
+		print(x.size())
 		vm_out = self.visual_module(img, rois)
 		lm_out = self.language_module(word_vectors)
 
