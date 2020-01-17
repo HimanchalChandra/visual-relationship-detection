@@ -1,10 +1,48 @@
-from utils.util import calc_iou
+import torch
+import torch.nn as nn
+from torchvision import models
+import json
+import numpy as np
+import torch.nn.functional as F
+from opts import parse_opts
+from torch.nn import CrossEntropyLoss
+import os
 
 
-obj_bbox_gt = 1, 2, 3, 4
+class VisionModule(nn.Module):
+	""" Vision Moddule"""
+	def __init__(self):
+		super(VisionModule, self).__init__()
+		resnet = models.resnet18(pretrained=True)
+		modules = list(resnet.children())[:-1]
+		self.resnet_backbone = nn.Sequential(*modules)
+		self.fc = nn.Linear(512, 5)
+
+	def forward(self, x):
+		x = self.resnet_backbone(x)
+		x = x.view(x.size(0), -1)
+		x = self.fc(x)
+		x = F.relu(x)
+		return x
 
 
-print(obj_bbox_gt)
+model = VisionModule()
+print(model)
 
-iou = calc_iou([1,2,3,4],obj_bbox_gt)
-print(iou)
+
+x = torch.Tensor(2,3,224,224)
+
+print(x.shape)
+out = model(x)
+print(out.shape)
+
+criterion = CrossEntropyLoss()
+
+targets = [0,1]
+targets = torch.Tensor(targets)
+
+print(out.type())
+targets = targets.type(torch.LongTensor)
+
+loss1 = criterion(out, targets)
+print(loss1)
