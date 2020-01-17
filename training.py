@@ -51,8 +51,8 @@ def train(model, loader, criterion, optimizer, epoch, device, opt):
             train_loss = 0.0
 
     # show information
-    recall = metric.compute_metrics()
-    print('Train set ({:d} samples): Average loss: {:.4f}\tRecall: {:.4f}'.format(
-        losses.count, losses.avg, recall))
+    recall, precision = metric.compute_metrics()
+    print('Train set ({:d} samples): Average loss: {:.4f}\tRecall: {:.4f}\tPrecision: {:.4f}'.format(
+        losses.count, losses.avg, recall, precision))
 
     return losses.avg, recall

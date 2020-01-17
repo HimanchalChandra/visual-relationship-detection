@@ -2,6 +2,7 @@ import csv
 from sklearn.metrics import recall_score
 import torch
 import numpy as np
+from sklearn.metrics import average_precision_score
 
 class AverageMeter(object):
     """Computes and stores the average and current value"""
@@ -95,4 +96,7 @@ class Metric:
         preds = np.array(onehot_encoded)
 
         recall = recall_score(targets, preds, average='micro')
-        return recall
+        self.average_precision["micro"] = average_precision_score(targets, preds,
+                                                                  average="micro")
+
+        return recall, self.average_precision
