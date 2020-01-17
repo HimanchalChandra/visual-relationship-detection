@@ -1,0 +1,8 @@
+/results
+*.txt
+*.pth
+*.h5
+*.pyc
+*.jpg
+*.jpeg
+*.avi
