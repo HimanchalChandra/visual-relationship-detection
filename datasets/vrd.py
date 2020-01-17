@@ -69,7 +69,7 @@ class VrdDataset(Dataset):
 	def __len__(self):
 		return len(self.imgs_list)
 
-	def prepare_rois(self, sub_bbox, obj_bbox, unioned):
+	def prepare_rois(self, sub_bbox, obj_bbox, unioned, factor_h, factor_w):
 		xmin_unioned, ymin_unioned, xmax_unioned, ymax_unioned = unioned
 
 		sub_xmin = sub_bbox[0]
@@ -128,12 +128,13 @@ class VrdDataset(Dataset):
 				# crop image
 				cropped_img = img.crop((int(xmin_unioned), int(
 					ymin_unioned), int(xmax_unioned), int(ymax_unioned)))
-				cropped_img = self.transform(cropped_img)
-				cropped_imgs.append(cropped_img)
 
 				img_w, img_h = cropped_img.size
 				factor_h = img_h/224
 				factor_w = img_w/224
+
+				cropped_img = self.transform(cropped_img)
+				cropped_imgs.append(cropped_img)
 
 				# prepare  spatial locations
 				sub_xmin = sub_bbox[0]
@@ -158,7 +159,7 @@ class VrdDataset(Dataset):
 				spatial_locations.append([sub_x1, sub_y1, sub_x2, sub_y2, obj_x1, obj_y1, obj_x2, obj_y2])
 
 				# prepare rois
-				rois = self.prepare_rois(sub_bbox, obj_bbox, unioned)
+				rois = self.prepare_rois(sub_bbox, obj_bbox, unioned, factor_h, factor_w)
 
 				# prepare word vectors
 				word_vectors.append([sub_label, obj_label])
