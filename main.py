@@ -9,10 +9,7 @@ from torchvision import transforms, utils
 import torch.optim as optim
 from torchvision.models import vgg16
 from PIL import Image, ImageFont, ImageDraw
-<<<<<<< HEAD
-=======
 from torch.nn import BCEWithLogitsLoss
->>>>>>> v2
 from dataset import get_dataset
 import json
 import torch.nn as nn
@@ -22,21 +19,12 @@ import argparse
 from torch.optim import lr_scheduler
 import random
 import cv2
-<<<<<<< HEAD
-from models.resnet import Net
-from training import train
-=======
 from training import train
 from util import Logger
->>>>>>> v2
 from validation import validate
 from opts import parse_opts
 from model import generate_model
 
-<<<<<<< HEAD
-=======
-
->>>>>>> v2
 # model = vgg16(pretrained=True)
 # modules = list(model.children())[:-2]
 # base_net = nn.Sequential(*modules)
@@ -44,10 +32,6 @@ from model import generate_model
 # print(base_net)
 # import torch
 
-<<<<<<< HEAD
-=======
-
->>>>>>> v2
 def main():
 	opt = parse_opts()
 	print(opt)
@@ -69,13 +53,8 @@ def main():
 	train_transform = transforms.Compose([
 		#transforms.RandomCrop(32, padding=3),
 		transforms.Resize((224, 224)),
-<<<<<<< HEAD
-			# transforms.RandomHorizontalFlip(),
-			# transforms.RandomRotation(10),
-=======
 		# transforms.RandomHorizontalFlip(),
 		# transforms.RandomRotation(10),
->>>>>>> v2
 		transforms.ToTensor(),
 		transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[
 			0.229, 0.224, 0.225])
@@ -90,14 +69,6 @@ def main():
 			0.229, 0.224, 0.225])
 	])
 
-<<<<<<< HEAD
-	
-	# data loaders
-	train_dataset = get_dataset(opt, 'train', transform=train_transform)
-	train_loader = DataLoader(train_dataset, batch_size=2, shuffle=True, num_workers=2, collate_fn=train_dataset.my_collate)
-	val_dataset = get_dataset(opt, 'test', transform=test_transform)
-	val_loader = DataLoader(val_dataset, batch_size=2, shuffle=True, num_workers=2, collate_fn=val_dataset.my_collate)
-=======
 	# data loaders
 	train_dataset = get_dataset(opt, 'train', transform=train_transform)
 	train_loader = DataLoader(train_dataset, batch_size=opt.batch_size, shuffle=True,
@@ -105,7 +76,6 @@ def main():
 	val_dataset = get_dataset(opt, 'test', transform=test_transform)
 	val_loader = DataLoader(val_dataset, batch_size=opt.batch_size, shuffle=True,
 							num_workers=1, collate_fn=val_dataset.my_collate)
->>>>>>> v2
 
 	print(f'Number of training examples: {len(train_loader.dataset)}')
 	print(f'Number of validation examples: {len(val_loader.dataset)}')
@@ -114,13 +84,10 @@ def main():
 	model, parameters = generate_model(opt)
 	model = model.to(device)
 
-<<<<<<< HEAD
-=======
 	if torch.cuda.device_count() > 1:
-	  	print("Let's use", torch.cuda.device_count(), "GPUs!")
+    	  	print("Let's use", torch.cuda.device_count(), "GPUs!")
   		model = nn.DataParallel(model)
 
->>>>>>> v2
 	if opt.nesterov:
 		dampening = 0
 	else:
@@ -135,22 +102,13 @@ def main():
 	# 		weight_decay=opt.weight_decay,
 	# 		nesterov=opt.nesterov)
 	# scheduler = lr_scheduler.ReduceLROnPlateau(optimizer, 'min', patience=opt.lr_patience)
-<<<<<<< HEAD
-	criterion = nn.CrossEntropyLoss()
-=======
 	criterion = BCEWithLogitsLoss()
->>>>>>> v2
 
 	# pretrained weights
 	if opt.weights:
 		checkpoint = torch.load(opt.weights)
 		model.load_state_dict(checkpoint['model_state_dict'], strict=False)
 		print("Pretrained weights loaded")
-<<<<<<< HEAD
-	
-=======
-
->>>>>>> v2
 	# resume model, optimizer if already exists
 	if opt.resume_path:
 		checkpoint = torch.load(opt.resume_path)
@@ -166,27 +124,6 @@ def main():
 	th = 10000
 	for epoch in range(start_epoch, opt.epochs+1):
 		# train, test model
-<<<<<<< HEAD
-		train_loss, train_acc = train(model, train_loader, criterion, optimizer, epoch, device, log_interval=opt.log_interval)
-		#scheduler.step(train_loss)
-		if (epoch) % opt.save_interval == 0:
-			val_loss, val_acc  = validate(model, val_loader, criterion, device)
-			#scheduler.step(val_loss)
-			# write summary
-			summary_writer.add_scalar(
-				'losses/train_loss', train_loss, global_step=epoch)
-			summary_writer.add_scalar(
-				'losses/val_loss', val_loss, global_step=epoch)
-			summary_writer.add_scalar(
-				'acc/train_acc', train_acc, global_step=epoch)
-			summary_writer.add_scalar(
-				'acc/val_acc', val_acc, global_step=epoch)
-
-			state = {'epoch': epoch, 'model_state_dict': model.state_dict(),
-					'optimizer_state_dict': optimizer.state_dict()}
-			torch.save(state, os.path.join('snapshots', f'model{epoch}.pth'))
-			print("Epoch {} model saved!\n".format(epoch))
-=======
 		train_loss, train_recall = train(
 			model, train_loader, criterion, optimizer, epoch, device, opt)
 		# scheduler.step(train_loss)
@@ -207,7 +144,6 @@ def main():
 		             'optimizer_state_dict': optimizer.state_dict()}
 		    torch.save(state, os.path.join('snapshots', f'model{epoch}.pth'))
 		    print("Epoch {} model saved!\n".format(epoch))
->>>>>>> v2
 
 
 if __name__ == "__main__":
