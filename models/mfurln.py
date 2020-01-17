@@ -99,10 +99,10 @@ class VisionModule(nn.Module):
 		self.roi_pool = ops.RoIPool(output_size=(7, 7), spatial_scale=0.03125)
 		self.fc = nn.Linear(75264, 4096)
 
-	def forward(self, x, rois):
+	def forward(self, x, rois_sub, rois_obj):
 		x = self.vgg_backbone(x)
-		x_sub = self.roi_pool(x, rois[0])
-		x_obj = self.roi_pool(x, rois[1])
+		x_sub = self.roi_pool(x, rois_sub)
+		x_obj = self.roi_pool(x, rois_obj)
 		
 		x = x.view(x.size(0), -1)
 		x_sub = x_sub.view(x_sub.size(0), -1)
@@ -133,8 +133,8 @@ class MFURLN(nn.Module):
 		self.fc3 = nn.Linear(1600, 500)
 		self.fc4 = nn.Linear(500, num_classes)
 
-	def forward(self, img, spatial_locations, word_vectors, rois):
-		vm_out = self.visual_module(img, rois)
+	def forward(self, img, spatial_locations, word_vectors, rois_sub, rois_obj):
+		vm_out = self.visual_module(img, rois_sub, rois_obj)
 		lm_out = self.language_module(word_vectors)
 
 		vm_out = vm_out.view(vm_out.size(0), -1)

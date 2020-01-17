@@ -280,9 +280,9 @@ class VrdDataset(Dataset):
 				word_vectors.append(item[2])
 				predicates.append(item[3])
 				binary_targets.append(item[4])
-				rois_sub += item[5]
-				rois_obj += item[6]
-			
+				rois_sub.append(item[5])
+				rois_obj.append(item[6])
+				
 
 		imgs = torch.cat(imgs)
 		spatial_locations = torch.cat(spatial_locations)
@@ -290,13 +290,14 @@ class VrdDataset(Dataset):
 		word_vectors = word_vectors.type(torch.LongTensor)
 		predicates = torch.cat(predicates)
 		binary_targets = torch.cat(binary_targets)
-		rois = [rois_sub, rois_obj]
+		rois_sub = torch.cat(rois_sub)
+		rois_obj = torch.cat(rois_obj)
 
 		# flatten
 		# targets = targets.view(-1)
 		# targets = targets.type(torch.LongTensor)
 		binary_targets = binary_targets.view(-1,1)
-		return imgs, spatial_locations, word_vectors, predicates, binary_targets, rois
+		return imgs, spatial_locations, word_vectors, predicates, binary_targets, rois_sub, rois_obj
 
 	def __getitem__(self, idx):
 		img_path = os.path.join(self.root, self.imgs_list[idx])
