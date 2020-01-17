@@ -307,9 +307,9 @@ class VrdDataset(Dataset):
 		detection  = self.detections[self.imgs_list[idx]]
 
 		# prepare determined and undetermined batches
-		imgs, spatial_locations, word_vectors, predicates, binary_targets = self.prepare_data(
+		imgs, spatial_locations, word_vectors, predicates, binary_targets, rois_sub, rois_obj = self.prepare_data(
 			img, annotation, detection)
 
-		return (imgs, spatial_locations, word_vectors, predicates, binary_targets)
+		return (imgs, spatial_locations, word_vectors, predicates, binary_targets, rois_sub, rois_obj)
 
 	
