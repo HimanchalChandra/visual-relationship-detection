@@ -292,7 +292,7 @@ class VrdDataset(Dataset):
 		binary_targets = torch.cat(binary_targets)
 		rois = [rois_sub, rois_obj]
 
-		print(len([0]))
+		print(len(rois[0]))
 		print(imgs.shape)
 
 		# flatten
