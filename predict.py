@@ -97,64 +97,45 @@ def main():
 			if ([sub_label, x1_sub, y1_sub, x2_sub, y2_sub] == [obj_label, x1_obj, y1_obj, x2_obj, y2_obj]):
 				continue
 			
-			# takes union
+			# takes union of sub and obj
 			polygons = [box(x1_sub, y1_sub, x2_sub, y2_sub),
-							box(x1_obj, y1_obj, x2_obj, y2_obj)]
+							box(x1_obj, y1_sub, x2_sub, y2_sub)]
 			unioned = cascaded_union(polygons)
 			unioned = unioned.bounds
-			x1_unioned, y1_unioned, x2_unioned, y2_unioned = unioned
+			xmin_unioned, ymin_unioned, xmax_unioned, ymax_unioned = unioned
 			# crop image
-			cropped_img = img.crop((int(x1_unioned), int(y1_unioned), int(x2_unioned), int(y2_unioned))) 
-
-			# cv2.imshow('window',np.array(cropped_img))
-			# cv2.waitKey(0)
-
-			img_w, img_h = cropped_img.size
-
+			cropped_img = img.crop((int(xmin_unioned), int(
+				ymin_unioned), int(xmax_unioned), int(ymax_unioned)))
 			cropped_img = transform(cropped_img)
-		
-			factor_h = img_h/224
-			factor_w = img_w/224
-
 			cropped_imgs.append(cropped_img)
-			# spatial locations
-			# find bounding box coordinates relative to unioned image
-			sub_x1 = x1_sub - int(x1_unioned)
-			sub_y1 = y1_sub - int(y1_unioned)
-			sub_x2 = x2_sub - int(x1_unioned)
-			sub_y2 = y2_sub - int(y1_unioned)
 
-			obj_x1 = x1_obj - int(x1_unioned)
-			obj_y1 = y1_obj - int(y1_unioned)
-			obj_x2 = x2_obj - int(x1_unioned)
-			obj_y2 = y2_obj - int(y1_unioned)
-			
-			# rescaling of bboxes for image with dim (224,224)
-			bbox_sub_scaled = [sub_x1//factor_w, sub_y1//factor_h, sub_x2//factor_w, sub_y2//factor_h]
-			bbox_obj_scaled = [obj_x1//factor_w, obj_y1//factor_h, obj_x2//factor_w, obj_y2//factor_h]
+			# prepare  spatial locations
+			sub_xmin = x1_sub
+			sub_ymin = y1_sub
+			sub_xmax = x2_sub
+			sub_ymax = y2_sub
+			obj_xmin = x1_obj
+			obj_ymin = y1_obj
+			obj_xmax = x2_obj
+			obj_ymax = y2_obj
 
-			# calculate iou
-			iou = calc_iou(bbox_sub_scaled, bbox_obj_scaled)
+			sub_x1 = int((sub_xmin - xmin_unioned)/(xmax_unioned - xmin_unioned))
+			sub_y1 = int((sub_ymin - ymin_unioned)/(ymax_unioned - ymin_unioned))
+			sub_x2 = int((sub_xmax - xmax_unioned)/(xmax_unioned - xmin_unioned))
+			sub_y2 = int((sub_ymax - ymax_unioned)/(ymax_unioned - ymin_unioned))
 
-			# setting cflag for subject
-			if calc_intersection(bbox_obj_scaled, bbox_sub_scaled) == 1:
-				cflag_sub = 1
-			else:
-				cflag_sub = 0
+			obj_x1 = int((obj_xmin - xmin_unioned)/(xmax_unioned - xmin_unioned))
+			obj_y1 = int((obj_ymin - ymin_unioned)/(ymax_unioned - ymin_unioned))
+			obj_x2 = int((obj_xmax - xmax_unioned)/(xmax_unioned - xmin_unioned))
+			obj_y2 = int((obj_ymax - ymax_unioned)/(ymax_unioned - ymin_unioned))
 
-			# setting cflag for object
-			if calc_intersection(bbox_sub_scaled, bbox_obj_scaled) == 1:
-				cflag_obj = 1
-			else:
-				cflag_obj = 0
+			spatial_locations.append([sub_x1, sub_y1, sub_x2, sub_y2, obj_x1, obj_y1, obj_x2, obj_y2])
+			spatial_locations1.append([sub_xmin, sub_ymin, sub_xmax, sub_ymax, obj_xmin, obj_ymin, obj_xmax, obj_ymax])
 
-			spatial_locations.append([iou, bbox_sub_scaled[0], bbox_sub_scaled[1], bbox_sub_scaled[2], bbox_sub_scaled[3],
-									  bbox_obj_scaled[0], bbox_obj_scaled[1], bbox_obj_scaled[2], bbox_obj_scaled[3], cflag_sub, cflag_obj])
-			# word vectors
-			word_vectors.append([word2int_obj[sub_label], word2int_obj[obj_label]])
-		
-		
+			# prepare word vectors
+			word_vectors.append([sub_label, obj_label])
 
+	
 	imgs = torch.stack(cropped_imgs)
 	spatial_locations = torch.Tensor(spatial_locations)
 	word_vectors = torch.Tensor(word_vectors)
@@ -191,7 +172,7 @@ def main():
 		score, pred = outputs[k].max(dim=0, keepdim=True) # get the index of the max log-probability
 		print(score)
 		if (score.item() > 0.95):
-			bboxes = spatial_locations[k]
+			bboxes = spatial_locations1[k]
 			draw1 = ImageDraw.Draw(img)
 			draw1.rectangle(((int(bboxes[1].item()), int(bboxes[2].item())), (int(bboxes[3].item()), int(bboxes[4].item()))))
 			draw1.rectangle(((int(bboxes[5].item()), int(bboxes[6].item())), (int(bboxes[7].item()), int(bboxes[8].item()))))
