@@ -101,18 +101,20 @@ class VisionModule(nn.Module):
 
 	def forward(self, x, rois_sub, rois_obj):
 		x = self.vgg_backbone(x)
-		# x_sub = self.roi_pool(x, rois_sub)
-		# x_obj = self.roi_pool(x, rois_obj)
+		x_sub = self.roi_pool(x, rois_sub)
+		x_obj = self.roi_pool(x, rois_obj)
 		
-		# x = x.view(x.size(0), -1)
-		# x_sub = x_sub.view(x_sub.size(0), -1)
-		# x_obj = x_obj.view(x_obj.size(0), -1)
+		x = x.view(x.size(0), -1)
+		x_sub = x_sub.view(x_sub.size(0), -1)
+		x_obj = x_obj.view(x_obj.size(0), -1)
+
+		print(x_sub)
+		print(x_obj)
+		print(x.shape)
 	
-		# x = torch.cat([x, x_sub, x_obj], dim=1)
+		x = torch.cat([x, x_sub, x_obj], dim=1)
 		x = self.fc(x)
 		x = F.relu(x)
-		print(x.size())
-		print(x)
 		return x
 
 
