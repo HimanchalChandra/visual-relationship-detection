@@ -69,37 +69,37 @@ class VrdDataset(Dataset):
 	def __len__(self):
 		return len(self.imgs_list)
 
-	def prepare_rois(self, sub_bbox, obj_bbox, unioned, factor_h, factor_w):
-		xmin_unioned, ymin_unioned, xmax_unioned, ymax_unioned = unioned
+	# def prepare_rois(self, sub_bbox, obj_bbox, unioned, factor_h, factor_w):
+	# 	xmin_unioned, ymin_unioned, xmax_unioned, ymax_unioned = unioned
 
-		sub_xmin = sub_bbox[0]
-		sub_ymin = sub_bbox[1]
-		sub_xmax = sub_bbox[2]
-		sub_ymax = sub_bbox[3]
-		obj_xmin = obj_bbox[0]
-		obj_ymin = obj_bbox[1]
-		obj_xmax = obj_bbox[2]
-		obj_ymax = obj_bbox[3]
+	# 	sub_xmin = sub_bbox[0]
+	# 	sub_ymin = sub_bbox[1]
+	# 	sub_xmax = sub_bbox[2]
+	# 	sub_ymax = sub_bbox[3]
+	# 	obj_xmin = obj_bbox[0]
+	# 	obj_ymin = obj_bbox[1]
+	# 	obj_xmax = obj_bbox[2]
+	# 	obj_ymax = obj_bbox[3]
 
-		# find bounding box coordinates relative to unioned image
-		sub_x1 = sub_xmin - int(xmin_unioned)
-		sub_y1 = sub_ymin - int(ymin_unioned)
-		sub_x2 = sub_xmax - int(xmin_unioned)
-		sub_y2 = sub_ymax - int(ymin_unioned)
+	# 	# find bounding box coordinates relative to unioned image
+	# 	sub_x1 = sub_xmin - int(xmin_unioned)
+	# 	sub_y1 = sub_ymin - int(ymin_unioned)
+	# 	sub_x2 = sub_xmax - int(xmin_unioned)
+	# 	sub_y2 = sub_ymax - int(ymin_unioned)
 
-		obj_x1 = obj_xmin - int(xmin_unioned)
-		obj_y1 = obj_ymin - int(ymin_unioned)
-		obj_x2 = obj_xmax - int(xmin_unioned)
-		obj_y2 = obj_ymax - int(ymin_unioned)
+	# 	obj_x1 = obj_xmin - int(xmin_unioned)
+	# 	obj_y1 = obj_ymin - int(ymin_unioned)
+	# 	obj_x2 = obj_xmax - int(xmin_unioned)
+	# 	obj_y2 = obj_ymax - int(ymin_unioned)
 
-		# rescaling of bboxes for image with dim (224,224)
-		bbox_sub_scaled = [sub_x1//factor_w, sub_y1 //
-							factor_h, sub_x2//factor_w, sub_y2//factor_h]
-		bbox_obj_scaled = [obj_x1//factor_w, obj_y1 //
-							factor_h, obj_x2//factor_w, obj_y2//factor_h]
+	# 	# rescaling of bboxes for image with dim (224,224)
+	# 	bbox_sub_scaled = [sub_x1//factor_w, sub_y1 //
+	# 						factor_h, sub_x2//factor_w, sub_y2//factor_h]
+	# 	bbox_obj_scaled = [obj_x1//factor_w, obj_y1 //
+	# 						factor_h, obj_x2//factor_w, obj_y2//factor_h]
 
-		rois = {'sub': torch.Tensor([bbox_sub_scaled]), 'obj': torch.Tensor([bbox_obj_scaled])}
-		return rois
+	# 	rois = {'sub': torch.Tensor([bbox_sub_scaled]), 'obj': torch.Tensor([bbox_obj_scaled])}
+	# 	return rois
 
 
 	def prepare_data(self, img, annotation, detection):
@@ -108,8 +108,8 @@ class VrdDataset(Dataset):
 		word_vectors = []
 		predicate_list = []
 		binary_targets = []
-		rois_sub = []
-		rois_obj = []
+		# rois_sub = []
+		# rois_obj = []
 
 		detection1 = detection.copy()
 		for sub in detection:
@@ -160,10 +160,10 @@ class VrdDataset(Dataset):
 
 				spatial_locations.append([sub_x1, sub_y1, sub_x2, sub_y2, obj_x1, obj_y1, obj_x2, obj_y2])
 
-				# prepare rois
-				rois = self.prepare_rois(sub_bbox, obj_bbox, unioned, factor_h, factor_w)
-				rois_sub.append(rois['sub'])
-				rois_obj.append(rois['obj'])
+				# # prepare rois
+				# rois = self.prepare_rois(sub_bbox, obj_bbox, unioned, factor_h, factor_w)
+				# rois_sub.append(rois['sub'])
+				# rois_obj.append(rois['obj'])
 
 				# prepare word vectors
 				word_vectors.append([sub_label, obj_label])
@@ -247,10 +247,10 @@ class VrdDataset(Dataset):
 
 				spatial_locations.append([sub_x1, sub_y1, sub_x2, sub_y2, obj_x1, obj_y1, obj_x2, obj_y2])
 
-				# prepare rois
-				rois = self.prepare_rois(sub_bbox, obj_bbox, unioned, factor_h, factor_w)
-				rois_sub.append(rois['sub'])
-				rois_obj.append(rois['obj'])
+				# # prepare rois
+				# rois = self.prepare_rois(sub_bbox, obj_bbox, unioned, factor_h, factor_w)
+				# rois_sub.append(rois['sub'])
+				# rois_obj.append(rois['obj'])
 
 				# prepare word vectors
 				word_vectors.append([sub_label_gt, obj_label_gt])
@@ -267,9 +267,9 @@ class VrdDataset(Dataset):
 		word_vectors = torch.Tensor(word_vectors)
 		predicates = torch.Tensor(predicate_list)
 		binary_targets = torch.Tensor(binary_targets)
-		rois_sub = torch.stack(rois_sub)
-		rois_obj = torch.stack(rois_obj)
-		return imgs, spatial_locations, word_vectors, predicates, binary_targets, rois_sub, rois_obj
+		# rois_sub = torch.stack(rois_sub)
+		# rois_obj = torch.stack(rois_obj)
+		return imgs, spatial_locations, word_vectors, predicates, binary_targets
 
 	def my_collate(self, batch):
 		imgs = []
@@ -277,8 +277,8 @@ class VrdDataset(Dataset):
 		word_vectors = []
 		predicates = []
 		binary_targets = []
-		rois_sub = []
-		rois_obj = []
+		# rois_sub = []
+		# rois_obj = []
 		for item in batch:
 			# remove incomplete annotations
 			if (len(item[0].shape) == 4):
@@ -287,8 +287,8 @@ class VrdDataset(Dataset):
 				word_vectors.append(item[2])
 				predicates.append(item[3])
 				binary_targets.append(item[4])
-				rois_sub.append(item[5])
-				rois_obj.append(item[6])
+				# rois_sub.append(item[5])
+				# rois_obj.append(item[6])
 				
 
 		imgs = torch.cat(imgs)
@@ -297,14 +297,14 @@ class VrdDataset(Dataset):
 		word_vectors = word_vectors.type(torch.LongTensor)
 		predicates = torch.cat(predicates)
 		binary_targets = torch.cat(binary_targets)
-		rois_sub = torch.cat(rois_sub)
-		rois_obj = torch.cat(rois_obj)
+		# rois_sub = torch.cat(rois_sub)
+		# rois_obj = torch.cat(rois_obj)
 
 		# flatten
 		# targets = targets.view(-1)
 		# targets = targets.type(torch.LongTensor)
 		binary_targets = binary_targets.view(-1,1)
-		return imgs, spatial_locations, word_vectors, predicates, binary_targets, rois_sub, rois_obj
+		return imgs, spatial_locations, word_vectors, predicates, binary_targets
 
 	def __getitem__(self, idx):
 		img_path = os.path.join(self.root, self.imgs_list[idx])
@@ -316,9 +316,9 @@ class VrdDataset(Dataset):
 		detection  = self.detections[self.imgs_list[idx]]
 
 		# prepare determined and undetermined batches
-		imgs, spatial_locations, word_vectors, predicates, binary_targets, rois_sub, rois_obj = self.prepare_data(
+		imgs, spatial_locations, word_vectors, predicates, binary_targets = self.prepare_data(
 			img, annotation, detection)
 
-		return (imgs, spatial_locations, word_vectors, predicates, binary_targets, rois_sub, rois_obj)
+		return (imgs, spatial_locations, word_vectors, predicates, binary_targets)
 
 	
