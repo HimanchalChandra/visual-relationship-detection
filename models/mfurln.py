@@ -152,7 +152,6 @@ class MFURLN(nn.Module):
 		x_c = F.relu(c)
 		c = self.fc2(x_c)
 
-		print(multi_model_features.shape)
  
 		# relation subnetwork
 		r = torch.cat([x_c, multi_model_features], dim=1)
