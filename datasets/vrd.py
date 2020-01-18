@@ -217,6 +217,11 @@ class VrdDataset(Dataset):
 				# crop image
 				cropped_img = img.crop((int(xmin_unioned), int(
 					ymin_unioned), int(xmax_unioned), int(ymax_unioned)))
+
+				img_w, img_h = cropped_img.size
+				factor_h = img_h/224
+				factor_w = img_w/224
+
 				cropped_img = self.transform(cropped_img)
 				cropped_imgs.append(cropped_img)
 
