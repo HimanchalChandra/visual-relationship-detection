@@ -1,4 +1,4 @@
-# Visual Relationship Detection
+# On Exploring Undetermined Relationships for Visual Relationship Detection
 
 ## Getting Started
 ### Prerequisites
@@ -6,10 +6,10 @@
 2. Keras RetinaNet https://github.com/fizyr/keras-retinanet
 
 ### Download the pre-trained weights
-https://drive.google.com/file/d/1tZJvOsta6CPIwz5D1ruZGIAncab0Nx2O/view?usp=sharing
+
 
 ### Download the pre-trained weights for Retina Net
-https://www.dropbox.com/s/hdwd6qjir032ktj/resnet50_vrd_inference.h5?dl=0
+
 
 ### Download Glove word vectors
 https://nlp.stanford.edu/projects/glove/

@@ -5,6 +5,7 @@ import json
 import numpy as np
 import torch.nn.functional as F
 from opts import parse_opts
+import torchvision.ops as ops
 import os
 
 opt = parse_opts()
@@ -79,12 +80,38 @@ class VisionModule(nn.Module):
 		self.resnet_backbone = nn.Sequential(*modules)
 		self.fc = nn.Linear(512, 4096)
 
-	def forward(self, x):
+	def forward(self, x, x1, x2):
 		x = self.resnet_backbone(x)
 		x = x.view(x.size(0), -1)
 		x = self.fc(x)
 		x = F.relu(x)
 		return x
+
+
+# class VisionModule(nn.Module):
+# 	""" Vision Moddule"""
+
+# 	def __init__(self):
+# 		super(VisionModule, self).__init__()
+# 		vgg = models.vgg16(pretrained=True)
+# 		modules = list(vgg.children())[:-1]
+# 		self.vgg_backbone = nn.Sequential(*modules)
+# 		self.roi_pool = ops.RoIPool(output_size=(7, 7), spatial_scale=0.03125)
+# 		self.fc = nn.Linear(75264, 4096)
+
+# 	def forward(self, x, rois_sub, rois_obj):
+# 		x = self.vgg_backbone(x)
+# 		x_sub = self.roi_pool(x, rois_sub)
+# 		x_obj = self.roi_pool(x, rois_obj)
+		
+# 		x = x.view(x.size(0), -1)
+# 		x_sub = x_sub.view(x_sub.size(0), -1)
+# 		x_obj = x_obj.view(x_obj.size(0), -1)
+	
+# 		x = torch.cat([x, x_sub, x_obj], dim=1)
+# 		x = self.fc(x)
+# 		x = F.relu(x)
+# 		return x
 
 
 class MFURLN(nn.Module):
@@ -105,17 +132,17 @@ class MFURLN(nn.Module):
 		self.fc3 = nn.Linear(1600, 500)
 		self.fc4 = nn.Linear(500, num_classes)
 
-	def forward(self, img, spatial_locations, word_vectors):
-		vm_out = self.visual_module(img)
+	def forward(self, img, spatial_locations, word_vectors, rois_sub, rois_obj):
+		vm_out = self.visual_module(img, rois_sub, rois_obj)
 		lm_out = self.language_module(word_vectors)
 
-		vm_out = vm_out.view(vm_out.size(0), -1)
-		lm_out = lm_out.view(lm_out.size(0), -1)
-		sp_out = spatial_locations.view(spatial_locations.size(0), -1)
+		# vm_out = vm_out.view(vm_out.size(0), -1)
+		# lm_out = lm_out.view(lm_out.size(0), -1)
+		# sp_out = spatial_locations.view(spatial_locations.size(0), -1)
 
 		vm_out = self.fc_vm(vm_out)
 		lm_out = self.fc_lm(lm_out)
-		sp_out = self.fc_sp(sp_out)
+		sp_out = self.fc_sp(spatial_locations)
 
 		# concat
 		multi_model_features = torch.cat([vm_out, lm_out, sp_out], dim=1)
@@ -124,7 +151,7 @@ class MFURLN(nn.Module):
 		c = self.fc1(multi_model_features)
 		x_c = F.relu(c)
 		c = self.fc2(x_c)
- 
+
 		# relation subnetwork
 		r = torch.cat([x_c, multi_model_features], dim=1)
 		r = self.fc3(r)
