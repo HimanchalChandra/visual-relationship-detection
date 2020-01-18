@@ -51,11 +51,8 @@ int2word_pred = {}
 for i, predicate in enumerate(predicates):
 	int2word_pred[i] = predicate
 
-
 			
 def main():
-
-
 	# CUDA for PyTorch
 	use_cuda = torch.cuda.is_available()
 	device = torch.device("cuda:0" if use_cuda else "cpu")
@@ -70,8 +67,6 @@ def main():
 							transforms.Normalize(mean=[0.485, 0.456, 0.406],std=[0.229, 0.224, 0.225])
 						])
 
-
-
 	# define model
 	model = MFURLN(num_classes=70)
 	model = model.to(device)
@@ -84,11 +79,10 @@ def main():
 	print("Model Restored")
 
 	for img_name in os.listdir('images'):
-		# try:
+		try:
 			img_rgb = Image.open(f'./images/{img_name}')
 			img_bgr = cv2.cvtColor(np.asarray(img_rgb), cv2.COLOR_RGB2BGR)
 			img_bgr = Image.fromarray(img_bgr)
-
 			detections = retina_net.detect(img_bgr)
 			print(detections)
 			cropped_imgs = []
@@ -163,8 +157,6 @@ def main():
 			print("prdicate scores")
 			print(scores.t())
 
-			
-
 			# apply mask for thresholding
 			# mask = scores > 0.2
 			mask = scores > 0.1
@@ -238,12 +230,9 @@ def main():
 
 			
 			cv2.imwrite(f'./outputs/{img_name}', draw)
-		# except:
-		# 	continue
-		
-			
+		except:
+			continue
 	
-
 			
 if __name__ == "__main__":
 	main()
