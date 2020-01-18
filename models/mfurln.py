@@ -105,6 +105,7 @@ class VisionModule(nn.Module):
 		x_obj = self.roi_pool(x, rois_obj)
 		
 		x = x.view(x.size(0), -1)
+		print(x.shape)
 		x_sub = x_sub.view(x_sub.size(0), -1)
 		x_obj = x_obj.view(x_obj.size(0), -1)
 	
