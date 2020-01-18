@@ -152,7 +152,7 @@ class MFURLN(nn.Module):
 		x_c = F.relu(c)
 		c = self.fc2(x_c)
 
-
+		print("#$%#")
 		print(x_c.shape)
 		print(multi_model_features.shape)
 		# relation subnetwork
