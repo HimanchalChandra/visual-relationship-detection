@@ -6,10 +6,10 @@
 2. Keras RetinaNet https://github.com/fizyr/keras-retinanet
 
 ### Download the pre-trained weights
-
+https://drive.google.com/file/d/1OrTK1XazyHB5mXaZczIS5vj5mz8ci-WM/view?usp=sharing
 
 ### Download the pre-trained weights for Retina Net
-
+https://drive.google.com/file/d/12kdl2AReO2BcC4CeO2NRz2ghwWMABscS/view?usp=sharing
 
 ### Download Glove word vectors
 https://nlp.stanford.edu/projects/glove/
