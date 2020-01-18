@@ -168,7 +168,7 @@ def main():
 
 			# apply mask for thresholding
 			# mask = scores > 0.2
-			mask = confidences > 0.6
+			mask = scores > 0.1
 			preds = preds[mask]
 			scores = scores[mask]
 
