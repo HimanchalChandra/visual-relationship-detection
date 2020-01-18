@@ -83,7 +83,6 @@ class VisionModule(nn.Module):
 	def forward(self, x, x1, x2):
 		x = self.resnet_backbone(x)
 		x = x.view(x.size(0), -1)
-		print(x)
 		x = self.fc(x)
 		x = F.relu(x)
 		return x
