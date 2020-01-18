@@ -80,7 +80,7 @@ def main():
 
 
 	# load pretrained weights
-	checkpoint = torch.load('./snapshots/model26.pth', map_location='cpu')
+	checkpoint = torch.load('./snapshots/model26.pth')
 	model.load_state_dict(checkpoint['model_state_dict'])
 	print("Model Restored")
 
