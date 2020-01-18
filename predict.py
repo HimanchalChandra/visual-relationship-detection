@@ -152,7 +152,8 @@ def main():
 			print(spatial_locations.shape)
 			print(word_vectors.shape)
 
-			confidences, predicates = model(imgs, spatial_locations, word_vectors)
+			with torch.no_grad():
+				confidences, predicates = model(imgs, spatial_locations, word_vectors)
 			confidences = torch.sigmoid(confidences)
 			predicates = torch.sigmoid(predicates)
 
