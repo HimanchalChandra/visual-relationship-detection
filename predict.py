@@ -80,13 +80,13 @@ def main():
 
 
 	# load pretrained weights
-	checkpoint = torch.load('./snapshots/model26.pth')
+	checkpoint = torch.load('./snapshots/model26.pth', map_location='cpu')
 	model.load_state_dict(checkpoint['model_state_dict'])
 	print("Model Restored")
 
 	for img_name in os.listdir('images'):
 		# try:
-			img_rgb = Image.open(f'./images/people.jpg')
+			img_rgb = Image.open(f'./images/{img_name}')
 			img_bgr = cv2.cvtColor(np.asarray(img_rgb), cv2.COLOR_RGB2BGR)
 			img_bgr = Image.fromarray(img_bgr)
 
@@ -152,7 +152,7 @@ def main():
 			print(spatial_locations.shape)
 			print(word_vectors.shape)
 
-			with torch.no_grad():
+			with torch.no_grad()
 				confidences, predicates = model(imgs, spatial_locations, word_vectors)
 			confidences = torch.sigmoid(confidences)
 			predicates = torch.sigmoid(predicates)
