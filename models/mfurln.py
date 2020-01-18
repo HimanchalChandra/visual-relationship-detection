@@ -80,7 +80,7 @@ class VisionModule(nn.Module):
 		self.resnet_backbone = nn.Sequential(*modules)
 		self.fc = nn.Linear(512, 4096)
 
-	def forward(self, x, x1, x2):
+	def forward(self, x):
 		x = self.resnet_backbone(x)
 		x = x.view(x.size(0), -1)
 		x = self.fc(x)
@@ -132,8 +132,8 @@ class MFURLN(nn.Module):
 		self.fc3 = nn.Linear(1600, 500)
 		self.fc4 = nn.Linear(500, num_classes)
 
-	def forward(self, img, spatial_locations, word_vectors, rois_sub, rois_obj):
-		vm_out = self.visual_module(img, rois_sub, rois_obj)
+	def forward(self, img, spatial_locations, word_vectors):
+		vm_out = self.visual_module(img)
 		lm_out = self.language_module(word_vectors)
 
 		# vm_out = vm_out.view(vm_out.size(0), -1)
