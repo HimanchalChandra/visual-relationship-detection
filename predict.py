@@ -86,7 +86,7 @@ def main():
 
 	for img_name in os.listdir('images'):
 		# try:
-			img_rgb = Image.open(f'./images/{img_name}')
+			img_rgb = Image.open(f'./images/sf.jpg')
 			img_bgr = cv2.cvtColor(np.asarray(img_rgb), cv2.COLOR_RGB2BGR)
 			img_bgr = Image.fromarray(img_bgr)
 
