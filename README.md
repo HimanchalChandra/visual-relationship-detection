@@ -38,8 +38,8 @@ python predict.py --dataset_path ./data/vrd --glove_path ./data/glove.6B/glove.6
 
 
 ## Reference
-Visual Relationship Detection with Language prior and Softmax
-https://arxiv.org/abs/1904.07798
+On Exploring Undetermined Relationships for Visual Relationship Detection
+https://arxiv.org/abs/1905.01595
 
 
 ## License
