@@ -136,13 +136,13 @@ class MFURLN(nn.Module):
 		vm_out = self.visual_module(img, rois_sub, rois_obj)
 		lm_out = self.language_module(word_vectors)
 
-		vm_out = vm_out.view(vm_out.size(0), -1)
-		lm_out = lm_out.view(lm_out.size(0), -1)
-		sp_out = spatial_locations.view(spatial_locations.size(0), -1)
+		# vm_out = vm_out.view(vm_out.size(0), -1)
+		# lm_out = lm_out.view(lm_out.size(0), -1)
+		# sp_out = spatial_locations.view(spatial_locations.size(0), -1)
 
 		vm_out = self.fc_vm(vm_out)
 		lm_out = self.fc_lm(lm_out)
-		sp_out = self.fc_sp(sp_out)
+		sp_out = self.fc_sp(spatial_locations)
 
 		# concat
 		multi_model_features = torch.cat([vm_out, lm_out, sp_out], dim=1)
