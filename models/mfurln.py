@@ -70,48 +70,50 @@ class LanguageModule(nn.Module):
 		return x
 
 
-class VisionModule(nn.Module):
-	""" Vision Moddule"""
-
-	def __init__(self):
-		super(VisionModule, self).__init__()
-		resnet = models.resnet18(pretrained=True)
-		modules = list(resnet.children())[:-1]
-		self.resnet_backbone = nn.Sequential(*modules)
-		self.fc = nn.Linear(512, 4096)
-
-	def forward(self, x, x1, x2):
-		x = self.resnet_backbone(x)
-		x = x.view(x.size(0), -1)
-		x = self.fc(x)
-		x = F.relu(x)
-		return x
-
-
 # class VisionModule(nn.Module):
 # 	""" Vision Moddule"""
 
 # 	def __init__(self):
 # 		super(VisionModule, self).__init__()
-# 		vgg = models.vgg16(pretrained=True)
-# 		modules = list(vgg.children())[:-1]
-# 		self.vgg_backbone = nn.Sequential(*modules)
-# 		self.roi_pool = ops.RoIPool(output_size=(7, 7), spatial_scale=0.03125)
-# 		self.fc = nn.Linear(75264, 4096)
+# 		resnet = models.resnet18(pretrained=True)
+# 		modules = list(resnet.children())[:-1]
+# 		self.resnet_backbone = nn.Sequential(*modules)
+# 		self.fc = nn.Linear(512, 4096)
 
-# 	def forward(self, x, rois_sub, rois_obj):
-# 		x = self.vgg_backbone(x)
-# 		x_sub = self.roi_pool(x, rois_sub)
-# 		x_obj = self.roi_pool(x, rois_obj)
-		
+# 	def forward(self, x, x1, x2):
+# 		x = self.resnet_backbone(x)
 # 		x = x.view(x.size(0), -1)
-# 		x_sub = x_sub.view(x_sub.size(0), -1)
-# 		x_obj = x_obj.view(x_obj.size(0), -1)
-	
-# 		x = torch.cat([x, x_sub, x_obj], dim=1)
 # 		x = self.fc(x)
 # 		x = F.relu(x)
 # 		return x
+
+
+class VisionModule(nn.Module):
+	""" Vision Moddule"""
+
+	def __init__(self):
+		super(VisionModule, self).__init__()
+		vgg = models.vgg16(pretrained=True)
+		modules = list(vgg.children())[:-1]
+		self.vgg_backbone = nn.Sequential(*modules)
+		self.roi_pool = ops.RoIPool(output_size=(7, 7), spatial_scale=0.03125)
+		self.fc = nn.Linear(75264, 4096)
+
+	def forward(self, x, rois_sub, rois_obj):
+		x = self.vgg_backbone(x)
+		x_sub = self.roi_pool(x, rois_sub)
+		x_obj = self.roi_pool(x, rois_obj)
+		
+		x = x.view(x.size(0), -1)
+		x_sub = x_sub.view(x_sub.size(0), -1)
+		x_obj = x_obj.view(x_obj.size(0), -1)
+	
+		x = torch.cat([x, x_sub, x_obj], dim=1)
+		x = self.fc(x)
+		x = F.relu(x)
+		print(x.size())
+		print(x)
+		return x
 
 
 
@@ -152,6 +154,9 @@ class MFURLN(nn.Module):
 		c = self.fc1(multi_model_features)
 		x_c = F.relu(c)
 		c = self.fc2(x_c)
+
+		print(x_c.shape)
+		print(multi_model_features.shape)
  
 		# relation subnetwork
 		r = torch.cat([x_c, multi_model_features], dim=1)
