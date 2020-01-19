@@ -44,7 +44,10 @@ def train(model, loader, criterion, optimizer, epoch, device, opt):
 
         # compute loss
         loss1 = criterion(confidences, targets_confidences)
+        print("$$$")
+        print(loss1)
         loss1 = (loss1 * weights_conf).mean()
+        print(loss1)
 
         loss2 = criterion(predicates, targets_predicates)
         loss2 = (loss2 * weights_pred).mean()
@@ -67,8 +70,8 @@ def train(model, loader, criterion, optimizer, epoch, device, opt):
                 epoch, losses.count, len(loader.dataset), 100. * (i + 1) / len(loader), avg_loss))
             train_loss = 0.0
 
-            recall = metric.compute_metrics()
-            print(recall)
+            # recall = metric.compute_metrics()
+            # print(recall)
 
     # show information
     recall = metric.compute_metrics()
