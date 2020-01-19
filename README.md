@@ -35,6 +35,10 @@ python predict.py --dataset_path ./data/vrd --glove_path ./data/glove.6B/glove.6
 ![alt text](./outputs/8544815951_de514c0305_b.jpg)
 
 
+### TO DO
+ROI POOLING
+
+
 
 
 ## Reference
