@@ -36,7 +36,7 @@ python predict.py --dataset_path ./data/vrd --glove_path ./data/glove.6B/glove.6
 
 
 ### TO DO
-ROI POOLING
+ROI Pooling
 
 
 
