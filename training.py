@@ -17,11 +17,11 @@ from util import AverageMeter, Metric
 
 
 def loss_weights(opt):
-    weights_pred = [10 for _ in range(opt.num_classes - 1)]
+    weights_pred = [0 for _ in range(opt.num_classes - 1)]
     weights_pred.append(0)
     weights_pred = torch.tensor(weights_pred).cuda()
 
-    weights_conf = [0, 10]
+    weights_conf = [0, 0]
     weights_conf = torch.tensor(weights_conf).cuda()
 
     return weights_conf, weights_pred
