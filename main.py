@@ -96,17 +96,17 @@ def main():
 	else:
 		dampening = opt.dampening
 	# define optimizer and criterion
-	# optimizer = optim.Adam(parameters)
-	optimizer = optim.SGD(
-			model.parameters(),
-			lr=opt.learning_rate,
-			momentum=opt.momentum,
-			dampening=dampening,
-			weight_decay=opt.weight_decay,
-			nesterov=opt.nesterov)
+	optimizer = optim.Adam(parameters, lr=0.0003)
+	# optimizer = optim.SGD(
+	# 		model.parameters(),
+	# 		lr=opt.learning_rate,
+	# 		momentum=opt.momentum,
+	# 		dampening=dampening,
+	# 		weight_decay=opt.weight_decay,
+	# 		nesterov=opt.nesterov)
 	# scheduler = lr_scheduler.ReduceLROnPlateau(optimizer, 'min', patience=opt.lr_patience)
 	drop_after_epoch = [10, 20, 30]
-	scheduler = optim.lr_scheduler.MultiStepLR(optimizer, milestones=drop_after_epoch, gamma=0.5)
+	scheduler = optim.lr_scheduler.ExponentialLR(optimizer, gamma = 0.5)
 
 	criterion = BCEWithLogitsLoss(reduction='none')
 
