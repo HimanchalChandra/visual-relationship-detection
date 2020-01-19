@@ -66,6 +66,9 @@ def train(model, loader, criterion, optimizer, epoch, device, opt):
             print('Train Epoch: {} [{}/{} ({:.0f}%)]\tLoss: {:.6f}'.format(
                 epoch, losses.count, len(loader.dataset), 100. * (i + 1) / len(loader), avg_loss))
             train_loss = 0.0
+            
+            recall = metric.compute_metrics()
+            print(recall)
 
     # show information
     recall = metric.compute_metrics()
