@@ -24,6 +24,7 @@ def train(model, loader, criterion, optimizer, epoch, device, opt):
     losses = AverageMeter()
     metric = Metric(opt.num_classes)
     for i, (imgs, spatial_locations, word_vectors, targets_predicates, targets_confidences) in enumerate(loader):
+        print(targets_confidences)
         # compute outputs
         imgs, spatial_locations, word_vectors, targets_confidences, targets_predicates = imgs.to(device), spatial_locations.to(
             device), word_vectors.to(device),  targets_confidences.to(device), targets_predicates.to(device)
