@@ -130,9 +130,9 @@ def main():
 	th = 10000
 	for epoch in range(start_epoch, opt.epochs+1):
 		# train, test model
-		scheduler.step()
 		train_loss, train_recall = train(
 			model, train_loader, criterion, optimizer, epoch, device, opt)
+		scheduler.step()
 		
 		if (epoch) % opt.save_interval == 0:
 			# val_loss, val_recall = validate(model, val_loader, criterion, epoch, device, opt)
