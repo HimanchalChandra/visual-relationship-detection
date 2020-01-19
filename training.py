@@ -45,7 +45,7 @@ def train(model, loader, criterion, optimizer, epoch, device, opt):
         # compute loss
         loss1 = criterion(confidences, targets_confidences)
         print("$$$")
-        print(loss1)
+        print(loss1.mean())
         loss1 = (loss1 * weights_conf).mean()
         print(loss1)
 
