@@ -126,7 +126,7 @@ class MFURLN(nn.Module):
 
 		self.fc1 = nn.Linear(1500, 100)
 		#self.fc1_bn = nn.BatchNorm1d(4096)
-		self.fc2 = nn.Linear(100, 1)
+		self.fc2 = nn.Linear(100, 2)
 
 		#self.fc1_bn = nn.BatchNorm1d(4096)
 		self.fc3 = nn.Linear(1600, 500)
