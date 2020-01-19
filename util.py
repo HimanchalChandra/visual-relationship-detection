@@ -96,14 +96,11 @@ class Metric:
         preds = np.array(onehot_encoded)
 
         recall = recall_score(targets, preds, average='micro')
-        # self.average_precision["micro"] = average_precision_score(targets, preds,
-        #                                                           average="micro")
-        # print("Averge Precision")
-        # print(self.average_precision["micro"])
-
+        self.average_precision["micro"] = average_precision_score(targets, preds,
+                                                                  average="micro")
         for i in range(self.num_classes):
             self.average_precision[i] = average_precision_score(targets[:, i], preds[:, i])
 
         print(self.average_precision)
-
+        
         return recall
