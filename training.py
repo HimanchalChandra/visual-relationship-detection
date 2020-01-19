@@ -17,11 +17,11 @@ from util import AverageMeter, Metric
 
 
 def loss_weights(opt):
-    weights_pred = [0 for _ in range(opt.num_classes - 1)]
-    weights_pred.append(0)
+    weights_pred = [1 for _ in range(opt.num_classes - 1)]
+    weights_pred.append(0.01)
     weights_pred = torch.tensor(weights_pred).cuda()
 
-    weights_conf = [0, 0]
+    weights_conf = [0.01, 1]
     weights_conf = torch.tensor(weights_conf).cuda()
 
     return weights_conf, weights_pred
@@ -66,9 +66,6 @@ def train(model, loader, criterion, optimizer, epoch, device, opt):
             print('Train Epoch: {} [{}/{} ({:.0f}%)]\tLoss: {:.6f}'.format(
                 epoch, losses.count, len(loader.dataset), 100. * (i + 1) / len(loader), avg_loss))
             train_loss = 0.0
-
-            recall = metric.compute_metrics()
-            print(recall)
 
     # show information
     recall = metric.compute_metrics()
