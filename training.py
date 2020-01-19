@@ -18,10 +18,10 @@ from util import AverageMeter, Metric
 
 def loss_weights(opt):
     weights_pred = [10 for _ in range(opt.num_classes - 1)]
-    weights_pred.append(0.002)
+    weights_pred.append(0)
     weights_pred = torch.tensor(weights_pred).cuda()
 
-    weights_conf = [0.002, 10]
+    weights_conf = [0, 10]
     weights_conf = torch.tensor(weights_conf).cuda()
 
     return weights_conf, weights_pred
@@ -44,10 +44,7 @@ def train(model, loader, criterion, optimizer, epoch, device, opt):
 
         # compute loss
         loss1 = criterion(confidences, targets_confidences)
-        print("$$$")
-        print(loss1.mean())
         loss1 = (loss1 * weights_conf).mean()
-        print(loss1)
 
         loss2 = criterion(predicates, targets_predicates)
         loss2 = (loss2 * weights_pred).mean()
@@ -70,8 +67,8 @@ def train(model, loader, criterion, optimizer, epoch, device, opt):
                 epoch, losses.count, len(loader.dataset), 100. * (i + 1) / len(loader), avg_loss))
             train_loss = 0.0
 
-            # recall = metric.compute_metrics()
-            # print(recall)
+            recall = metric.compute_metrics()
+            print(recall)
 
     # show information
     recall = metric.compute_metrics()
