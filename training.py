@@ -16,15 +16,15 @@ import cv2
 from util import AverageMeter, Metric
 
 
-def loss_weights(opt):
-    weights_pred = [1 for _ in range(opt.num_classes - 1)]
-    weights_pred.append(0.01)
-    weights_pred = torch.tensor(weights_pred).cuda()
+# def loss_weights(opt):
+#     weights_pred = [1.5 for _ in range(opt.num_classes - 1)]
+#     weights_pred.append(0.01)
+#     weights_pred = torch.tensor(weights_pred).cuda()
 
-    weights_conf = [0.01, 1]
-    weights_conf = torch.tensor(weights_conf).cuda()
+#     weights_conf = [0.01, 1.5]
+#     weights_conf = torch.tensor(weights_conf).cuda()
 
-    return weights_conf, weights_pred
+#     return weights_conf, weights_pred
 
 
 def train(model, loader, criterion, optimizer, epoch, device, opt):
@@ -35,7 +35,7 @@ def train(model, loader, criterion, optimizer, epoch, device, opt):
     losses = AverageMeter()
     metric = Metric(opt.num_classes)
 
-    weights_conf, weights_pred = loss_weights(opt)
+    #weights_conf, weights_pred = loss_weights(opt)
     for i, (imgs, spatial_locations, word_vectors, targets_predicates, targets_confidences) in enumerate(loader):
         # compute outputs
         imgs, spatial_locations, word_vectors, targets_confidences, targets_predicates = imgs.to(device), spatial_locations.to(
@@ -43,11 +43,11 @@ def train(model, loader, criterion, optimizer, epoch, device, opt):
         confidences, predicates = model(imgs, spatial_locations, word_vectors)
 
         # compute loss
-        loss1 = criterion(confidences, targets_confidences)
-        loss1 = (loss1 * weights_conf).mean()
+        loss1 = criterion[0](confidences, targets_confidences)
+        # loss1 = (loss1 * weights_conf).mean()
 
-        loss2 = criterion(predicates, targets_predicates)
-        loss2 = (loss2 * weights_pred).mean()
+        loss2 = criterion[1](predicates, targets_predicates)
+        # loss2 = (loss2 * weights_pred).mean()
 
         tot_loss = loss1 + loss2
         train_loss += tot_loss.item()

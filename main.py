@@ -10,6 +10,7 @@ import torch.optim as optim
 from torchvision.models import vgg16
 from PIL import Image, ImageFont, ImageDraw
 from torch.nn import BCEWithLogitsLoss
+from torch.nn import CrossEntropyLoss
 from dataset import get_dataset
 import json
 import torch.nn as nn
@@ -108,7 +109,18 @@ def main():
 	drop_after_epoch = [10, 20, 30]
 	scheduler = optim.lr_scheduler.ExponentialLR(optimizer, gamma = 0.5)
 
-	criterion = BCEWithLogitsLoss(reduction='none')
+	#criterion = BCEWithLogitsLoss(reduction='none')
+
+	class_weights = [0.01, 1.5]
+	class_weights = torch.tensor(class_weights).cuda()
+	criterion1 = CrossEntropyLoss(weight=class_weights)
+
+	class_weights = [1.5 for _ in range(opt.num_classes - 1)]
+	class_weights.append(0.01)
+	class_weights = torch.tensor(class_weights).cuda()
+	criterion2 = CrossEntropyLoss(weight=class_weights)
+
+	criterion = [criterion1, criterion2]
 
 	# pretrained weights
 	if opt.weights:

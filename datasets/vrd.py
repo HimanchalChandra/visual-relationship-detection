@@ -189,14 +189,15 @@ class VrdDataset(Dataset):
 				
 				if (data_type == 'determined'):
 					predicate = sub_pred_obj['predicate']
-					predicate = one_hot_encode(predicate, self.num_classes)
+					#predicate = one_hot_encode(predicate, self.num_classes)
 					predicate_list.append(predicate)
-					binary_targets.append(one_hot_encode(1, num_classes = 2))
+					#binary_targets.append(one_hot_encode(1, num_classes = 2))
+					binary_targets.append(1)
 				else:
 					# predicate = [0 for _ in range(self.num_classes)]
-					predicate = one_hot_encode(70, self.num_classes)
+					#predicate = one_hot_encode(70, self.num_classes)
 					predicate_list.append(predicate)
-					binary_targets.append(one_hot_encode(0, num_classes = 2))
+					binary_targets.append(0)
 
 
 		if not cropped_imgs:
@@ -258,9 +259,9 @@ class VrdDataset(Dataset):
 				
 				# prepare predicates
 				predicate = sub_pred_obj['predicate']
-				predicate = one_hot_encode(predicate, self.num_classes)
+				#predicate = one_hot_encode(predicate, self.num_classes)
 				predicate_list.append(predicate)
-				binary_targets.append(one_hot_encode(1, num_classes = 2))
+				binary_targets.append(1)
 			
 
 		imgs = torch.stack(cropped_imgs)
