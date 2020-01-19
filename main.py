@@ -96,15 +96,17 @@ def main():
 	else:
 		dampening = opt.dampening
 	# define optimizer and criterion
-	optimizer = optim.Adam(parameters)
-	# optimizer = optim.SGD(
-	# 		model.parameters(),
-	# 		lr=opt.learning_rate,
-	# 		momentum=opt.momentum,
-	# 		dampening=dampening,
-	# 		weight_decay=opt.weight_decay,
-	# 		nesterov=opt.nesterov)
+	# optimizer = optim.Adam(parameters)
+	optimizer = optim.SGD(
+			model.parameters(),
+			lr=opt.learning_rate,
+			momentum=opt.momentum,
+			dampening=dampening,
+			weight_decay=opt.weight_decay,
+			nesterov=opt.nesterov)
 	# scheduler = lr_scheduler.ReduceLROnPlateau(optimizer, 'min', patience=opt.lr_patience)
+	drop_after_epoch = [10, 20, 30]
+	scheduler = optim.lr_scheduler.MultiStepLR(optimizer, milestones=drop_after_epoch, gamma=0.5)
 	criterion = BCEWithLogitsLoss()
 
 	# pretrained weights
@@ -128,26 +130,27 @@ def main():
 	th = 10000
 	for epoch in range(start_epoch, opt.epochs+1):
 		# train, test model
+		scheduler.step()
 		train_loss, train_recall = train(
 			model, train_loader, criterion, optimizer, epoch, device, opt)
-		# scheduler.step(train_loss)
+		
 		if (epoch) % opt.save_interval == 0:
-		    # val_loss, val_recall = validate(model, val_loader, criterion, epoch, device, opt)
-		    # scheduler.step(val_loss)
-		    # # write summary
-		    # summary_writer.add_scalar(
-		    #     'losses/train_loss', train_loss, global_step=epoch)
-		    # summary_writer.add_scalar(
-		    #     'losses/val_loss', val_loss, global_step=epoch)
-		    # summary_writer.add_scalar(
-		    #     'acc/train_acc', train_recall, global_step=epoch)
-		    # summary_writer.add_scalar(
-		    #     'acc/val_acc', val_recall, global_step=epoch)
+			# val_loss, val_recall = validate(model, val_loader, criterion, epoch, device, opt)
+			# scheduler.step(val_loss)
+			# # write summary
+			# summary_writer.add_scalar(
+			#     'losses/train_loss', train_loss, global_step=epoch)
+			# summary_writer.add_scalar(
+			#     'losses/val_loss', val_loss, global_step=epoch)
+			# summary_writer.add_scalar(
+			#     'acc/train_acc', train_recall, global_step=epoch)
+			# summary_writer.add_scalar(
+			#     'acc/val_acc', val_recall, global_step=epoch)
 
-		    state = {'epoch': epoch, 'model_state_dict': model.state_dict(),
-		             'optimizer_state_dict': optimizer.state_dict()}
-		    torch.save(state, os.path.join('snapshots', f'model{epoch}.pth'))
-		    print("Epoch {} model saved!\n".format(epoch))
+			state = {'epoch': epoch, 'model_state_dict': model.state_dict(),
+					 'optimizer_state_dict': optimizer.state_dict()}
+			torch.save(state, os.path.join('snapshots', f'model{epoch}.pth'))
+			print("Epoch {} model saved!\n".format(epoch))
 
 
 if __name__ == "__main__":
