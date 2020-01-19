@@ -86,18 +86,27 @@ class Metric:
         preds = preds.numpy()
         targets = targets.numpy()
 
-        preds = np.argmax(preds, axis=1)
-        # one hot encode
+        #preds = np.argmax(preds, axis=1)
+        # # one hot encode
+        # onehot_encoded = list()
+        # for value in preds:
+        #     letter = [0 for _ in range(self.num_classes)]
+        #     letter[value] = 1
+        #     onehot_encoded.append(letter)
+        # preds = np.array(onehot_encoded)
+
         onehot_encoded = list()
-        for value in preds:
+        for value in targets:
             letter = [0 for _ in range(self.num_classes)]
             letter[value] = 1
             onehot_encoded.append(letter)
-        preds = np.array(onehot_encoded)
+        targets = np.array(onehot_encoded)
 
-        recall = recall_score(targets, preds, average='micro')
+        # recall = recall_score(targets, preds, average='micro')
         self.average_precision["micro"] = average_precision_score(targets, preds,
                                                                   average="micro")
+        
+        recall = self.average_precision
         for i in range(self.num_classes):
             self.average_precision[i] = average_precision_score(targets[:, i], preds[:, i])
 
