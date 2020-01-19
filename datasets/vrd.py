@@ -191,11 +191,12 @@ class VrdDataset(Dataset):
 					predicate = sub_pred_obj['predicate']
 					predicate = one_hot_encode(predicate, self.num_classes)
 					predicate_list.append(predicate)
-					binary_targets.append(1)
+					binary_targets.append(one_hot_encode(1, num_classes = 2))
 				else:
-					predicate = [0 for _ in range(self.num_classes)]
+					# predicate = [0 for _ in range(self.num_classes)]
+					predicate = one_hot_encode(70, self.num_classes)
 					predicate_list.append(predicate)
-					binary_targets.append(0)
+					binary_targets.append(one_hot_encode(0, num_classes = 2))
 
 
 		if not cropped_imgs:
@@ -259,7 +260,7 @@ class VrdDataset(Dataset):
 				predicate = sub_pred_obj['predicate']
 				predicate = one_hot_encode(predicate, self.num_classes)
 				predicate_list.append(predicate)
-				binary_targets.append(1)
+				binary_targets.append(one_hot_encode(1, num_classes = 2))
 			
 
 		imgs = torch.stack(cropped_imgs)
@@ -303,7 +304,7 @@ class VrdDataset(Dataset):
 		# flatten
 		# targets = targets.view(-1)
 		# targets = targets.type(torch.LongTensor)
-		binary_targets = binary_targets.view(-1,1)
+		#binary_targets = binary_targets.view(-1,1)
 		return imgs, spatial_locations, word_vectors, predicates, binary_targets
 
 	def __getitem__(self, idx):

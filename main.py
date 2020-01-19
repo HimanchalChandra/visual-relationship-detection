@@ -107,7 +107,8 @@ def main():
 	# scheduler = lr_scheduler.ReduceLROnPlateau(optimizer, 'min', patience=opt.lr_patience)
 	drop_after_epoch = [10, 20, 30]
 	scheduler = optim.lr_scheduler.MultiStepLR(optimizer, milestones=drop_after_epoch, gamma=0.5)
-	criterion = BCEWithLogitsLoss()
+
+	criterion = BCEWithLogitsLoss(reduction='none')
 
 	# pretrained weights
 	if opt.weights:

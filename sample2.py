@@ -27,12 +27,18 @@
 # model.load_state_dict(checkpoint['model_state_dict'])
 # print("Model Restored")
 
-import torch
+# import torch
 
-z = torch.ones(3, 2)
-x = z.view(2, 3)
-x + 2
+# z = torch.ones(3, 2)
+# x = z.view(2, 3)
+# x + 2
 
-print(z)
+# print(z)
 
+num_classes = 71
 
+weights = [1 for _ in range(num_classes - 1)]
+
+weights.append(0.5)
+
+print(weights)
