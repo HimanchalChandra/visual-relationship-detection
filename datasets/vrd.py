@@ -196,9 +196,8 @@ class VrdDataset(Dataset):
 				else:
 					# predicate = [0 for _ in range(self.num_classes)]
 					#predicate = one_hot_encode(70, self.num_classes)
-					predicate_list.append(predicate)
+					predicate_list.append(70)
 					binary_targets.append(0)
-
 
 		if not cropped_imgs:
 			for sub_pred_obj in annotation:
