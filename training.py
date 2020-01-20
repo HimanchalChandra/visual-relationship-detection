@@ -43,6 +43,11 @@ def train(model, loader, criterion, optimizer, epoch, device, opt):
         confidences, predicates = model(imgs, spatial_locations, word_vectors)
 
         print(targets_predicates)
+        predicates = torch.sigmoid(predicates)
+        scores, preds = predicates.max(dim=1, keepdim=True) # get the index of the max log-probability
+        print(preds)
+
+
 
         # compute loss
         loss1 = criterion[0](confidences, targets_confidences)
