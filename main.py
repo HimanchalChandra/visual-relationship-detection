@@ -111,14 +111,14 @@ def main():
 
 	#criterion = BCEWithLogitsLoss(reduction='none')
 
-	class_weights = [0.5, 1]
+	class_weights = [1, 0.5]
 	class_weights = torch.tensor(class_weights).cuda()
-	criterion1 = CrossEntropyLoss()
+	criterion1 = CrossEntropyLoss(weight=class_weights)
 
-	class_weights = [1 for _ in range(opt.num_classes - 1)]
-	class_weights.append(0.5)
+	class_weights = [0.5 for _ in range(opt.num_classes - 1)]
+	class_weights.append(1)
 	class_weights = torch.tensor(class_weights).cuda()
-	criterion2 = CrossEntropyLoss()
+	criterion2 = CrossEntropyLoss(weight=class_weights)
 
 	criterion = [criterion1, criterion2]
 
