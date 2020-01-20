@@ -67,10 +67,6 @@ def train(model, loader, criterion, optimizer, epoch, device, opt):
                 epoch, losses.count, len(loader.dataset), 100. * (i + 1) / len(loader), avg_loss))
             train_loss = 0.0
 
-            print(targets_predicates)
-            scores, indices = torch.max(predicates, dim=1)
-            print(indices)
-
 
     # show information
     recall = metric.compute_metrics()
