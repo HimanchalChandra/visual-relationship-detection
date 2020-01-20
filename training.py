@@ -77,4 +77,8 @@ def train(model, loader, criterion, optimizer, epoch, device, opt):
     print('Train set ({:d} samples): Average loss: {:.4f}\tRecall: {:.4f}'.format(
         losses.count, losses.avg, recall))
 
+    print(targets_predicates)
+    scores, indices = torch.max(predicates, dim=1)
+    print(indices)
+
     return losses.avg, recall
