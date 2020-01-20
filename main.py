@@ -113,12 +113,12 @@ def main():
 
 	class_weights = [0.5, 2]
 	class_weights = torch.tensor(class_weights).cuda()
-	criterion1 = CrossEntropyLoss(weight=class_weights)
+	criterion1 = CrossEntropyLoss()
 
 	class_weights = [2 for _ in range(opt.num_classes - 1)]
 	class_weights.append(0.5)
 	class_weights = torch.tensor(class_weights).cuda()
-	criterion2 = CrossEntropyLoss(weight=class_weights)
+	criterion2 = CrossEntropyLoss()
 
 	criterion = [criterion1, criterion2]
 
