@@ -15,7 +15,7 @@ from utils.util import calc_iou, calc_intersection
 
 
 def one_hot_encode(integer_encoding, num_classes):
-    """ One hot encode.
+	""" One hot encode.
 	"""
 	onehot_encoded = [0 for _ in range(num_classes)]
 	onehot_encoded[integer_encoding] = 1
