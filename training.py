@@ -42,6 +42,8 @@ def train(model, loader, criterion, optimizer, epoch, device, opt):
             device), word_vectors.to(device),  targets_confidences.to(device), targets_predicates.to(device)
         confidences, predicates = model(imgs, spatial_locations, word_vectors)
 
+        print(predicates)
+
         # compute loss
         loss1 = criterion[0](confidences, targets_confidences)
         # loss1 = (loss1 * weights_conf).mean()

@@ -73,14 +73,14 @@ def main():
 
 
 	# define model
-	model = MFURLN(num_classes=70)
+	model = MFURLN(num_classes=71)
 	model = model.to(device)
 
 	model = nn.DataParallel(model)
 
 
 	# load pretrained weights
-	checkpoint = torch.load('./snapshots/model26.pth', map_location='cpu')
+	checkpoint = torch.load('/Users/pranoyr/Desktop/model20.pth', map_location='cpu')
 	model.load_state_dict(checkpoint['model_state_dict'])
 	print("Model Restored")
 
@@ -169,7 +169,7 @@ def main():
 
 			# apply mask for thresholding
 			# mask = scores > 0.2
-			mask = scores > 0.5
+			mask = scores > 0.99
 			preds = preds[mask]
 			scores = scores[mask]
 
@@ -221,10 +221,13 @@ def main():
 				centr_sub = ( int((bboxes[0].item()+ bboxes[2].item())/2) , int((bboxes[1].item()+ bboxes[3].item())/2) )
 				centr_obj = ( int((bboxes[4].item()+ bboxes[6].item())/2) , int((bboxes[5].item()+ bboxes[7].item())/2) )
 
-				lineThickness = 1
-				cv2.line(draw, centr_sub, centr_obj, (0,255,0), lineThickness)
+				
+				if pred.item() == 70:
+    					continue
 				print(f'{i}) {int2word_obj[word_vectors[i][0].item()]} {int2word_pred[pred.item()]} {int2word_obj[word_vectors[i][1].item()]} ,score:{scores[i].item()}')
 				
+				lineThickness = 1
+				cv2.line(draw, centr_sub, centr_obj, (0,255,0), lineThickness)
 				# if (i==5):
 				# 	break
 
