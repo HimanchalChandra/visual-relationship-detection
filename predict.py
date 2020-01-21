@@ -80,7 +80,7 @@ def main():
 
 
 	# load pretrained weights
-	checkpoint = torch.load('/Users/pranoyr/Desktop/model20.pth', map_location='cpu')
+	checkpoint = torch.load('/Users/pranoyr/Desktop/model26.pth', map_location='cpu')
 	model.load_state_dict(checkpoint['model_state_dict'])
 	print("Model Restored")
 
@@ -169,7 +169,7 @@ def main():
 
 			# apply mask for thresholding
 			# mask = scores > 0.2
-			mask = scores > 0.99
+			mask = scores > 0.5
 			preds = preds[mask]
 			scores = scores[mask]
 
