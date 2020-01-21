@@ -53,7 +53,7 @@ def train(model, loader, criterion, optimizer, epoch, device, opt):
         train_loss += tot_loss.item()
 
         losses.update(tot_loss.item(), imgs.size(0))
-        predicates = torch.sigmoid(predicates)
+        predicates = torch.softmax(predicates)
         metric.update(predicates, targets_predicates)
 
         optimizer.zero_grad()
