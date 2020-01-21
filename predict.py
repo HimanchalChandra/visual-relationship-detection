@@ -9,6 +9,7 @@ from torchvision import transforms, utils
 import torch.optim as optim
 from torchvision.models import vgg16
 from PIL import Image, ImageFont, ImageDraw
+import torch.nn.functional as F
 from dataset import VrdDataset
 import json
 import torch.nn as nn
@@ -154,8 +155,8 @@ def main():
 
 			with torch.no_grad():
 				confidences, predicates = model(imgs, spatial_locations, word_vectors)
-			confidences = torch.sigmoid(confidences)
-			predicates = torch.sigmoid(predicates)
+			confidences = F.softmax(confidences, dim=1)
+			predicates = F.softmax(predicates, dim=1)
 
 			print("confidences")
 			print(confidences.t())
@@ -169,7 +170,7 @@ def main():
 
 			# apply mask for thresholding
 			# mask = scores > 0.2
-			mask = scores > 0.5
+			mask = scores > 0.7
 			preds = preds[mask]
 			scores = scores[mask]
 
