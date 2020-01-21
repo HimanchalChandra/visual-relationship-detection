@@ -10,6 +10,7 @@ import torch.optim as optim
 from PIL import Image, ImageFont, ImageDraw
 import json
 import torch.nn as nn
+import torch.nn.functional as F
 import argparse
 import random
 import cv2
@@ -53,7 +54,7 @@ def train(model, loader, criterion, optimizer, epoch, device, opt):
         train_loss += tot_loss.item()
 
         losses.update(tot_loss.item(), imgs.size(0))
-        predicates = torch.softmax(predicates)
+        predicates = F.softmax(predicates, dim=1)
         metric.update(predicates, targets_predicates)
 
         optimizer.zero_grad()
