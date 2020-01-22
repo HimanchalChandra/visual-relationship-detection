@@ -103,6 +103,7 @@ class VisionModule(nn.Module):
 		x = self.vgg_backbone(x)
 
 		print(rois_sub)
+		print(rois_sub.shape)
 		x_sub = self.roi_pool(x, rois_sub)
 		x_obj = self.roi_pool(x, rois_obj)
 		
