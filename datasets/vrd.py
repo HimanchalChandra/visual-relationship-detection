@@ -114,6 +114,7 @@ class VrdDataset(Dataset):
 		binary_targets = []
 		rois_sub = []
 		rois_obj = []
+		
 
 		detection1 = detection.copy()
 		for sub in detection:
@@ -284,6 +285,7 @@ class VrdDataset(Dataset):
 		binary_targets = []
 		rois_sub = []
 		rois_obj = []
+		self.batch_idx = 0
 		for item in batch:
 			# remove incomplete annotations
 			if (len(item[0].shape) == 4):
