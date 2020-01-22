@@ -37,11 +37,11 @@ def train(model, loader, criterion, optimizer, epoch, device, opt):
     metric = Metric(opt.num_classes)
 
     #weights_conf, weights_pred = loss_weights(opt)
-    for i, (imgs, spatial_locations, word_vectors, targets_predicates, targets_confidences) in enumerate(loader):
+    for i, (imgs, spatial_locations, word_vectors, targets_predicates, targets_confidences, rois_sub, rois_obj) in enumerate(loader):
         # compute outputs
-        imgs, spatial_locations, word_vectors, targets_confidences, targets_predicates = imgs.to(device), spatial_locations.to(
-            device), word_vectors.to(device),  targets_confidences.to(device), targets_predicates.to(device)
-        confidences, predicates = model(imgs, spatial_locations, word_vectors)
+        imgs, spatial_locations, word_vectors, targets_confidences, targets_predicates, rois_sub, rois_obj = imgs.to(device), spatial_locations.to(
+            device), word_vectors.to(device),  targets_confidences.to(device), targets_predicates.to(device), rois_sub.device(), rois_obj.device()
+        confidences, predicates = model(imgs, spatial_locations, word_vectors, rois_sub, rois_obj)
 
         # compute loss
         loss1 = criterion[0](confidences, targets_confidences)
