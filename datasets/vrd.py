@@ -254,7 +254,7 @@ class VrdDataset(Dataset):
 				spatial_locations.append([sub_x1, sub_y1, sub_x2, sub_y2, obj_x1, obj_y1, obj_x2, obj_y2])
 
 				# prepare rois
-				rois = self.prepare_rois(sub_bbox, obj_bbox, unioned, factor_h, factor_w)
+				rois = self.prepare_rois(sub_bbox_gt, obj_bbox_gt, unioned, factor_h, factor_w)
 				rois_sub.append(rois['sub'])
 				rois_obj.append(rois['obj'])
 
