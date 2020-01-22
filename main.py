@@ -14,7 +14,6 @@ from torch.nn import CrossEntropyLoss
 from dataset import get_dataset
 import json
 import torch.nn as nn
-from torchvision.models import resnet50
 import tensorboardX
 import argparse
 from torch.optim import lr_scheduler
