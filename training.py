@@ -51,9 +51,9 @@ def train(model, loader, criterion, optimizer, epoch, device, opt):
         tot_loss = loss1 + loss2
         train_loss += tot_loss.item()
 
-        # losses.update(tot_loss.item(), imgs.size(0))
-        # predicates = F.softmax(predicates, dim=1)
-        # metric.update(predicates, targets_predicates)
+        losses.update(tot_loss.item(), imgs.size(0))
+        predicates = F.softmax(predicates, dim=1)
+        metric.update(predicates, targets_predicates)
 
         optimizer.zero_grad()
         tot_loss.backward()
