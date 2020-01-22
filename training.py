@@ -59,6 +59,11 @@ def train(model, loader, criterion, optimizer, epoch, device, opt):
         tot_loss.backward()
         optimizer.step()
 
+
+        del imgs, spatial_locations, word_vectors, targets_predicates, targets_confidences, rois_sub, rois_obj
+
+        
+
         # show information
         if (i+1) % opt.log_interval == 0:
             avg_loss = train_loss / opt.log_interval
