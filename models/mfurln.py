@@ -119,7 +119,7 @@ class VisionModule(nn.Module):
 	def __init__(self):
 		super(VisionModule, self).__init__()
 		vgg = models.resnet18(pretrained=True)
-		modules = list(vgg.children())[:-1]
+		modules = list(vgg.children())[:-2]
 		self.vgg_backbone = nn.Sequential(*modules)
 		self.roi_pool = ops.RoIPool(output_size=(7, 7), spatial_scale=0.03125)
 		self.fc = nn.Linear(50688, 4096)
@@ -149,9 +149,9 @@ class MFURLN(nn.Module):
 		self.visual_module = VisionModule()
 		self.language_module = LanguageModule()
 
-		self.fc_vm = self.fc1 = nn.Linear(4096, 500)
-		self.fc_lm = self.fc1 = nn.Linear(500, 500)
-		self.fc_sp = self.fc1 = nn.Linear(8, 500)
+		self.fc_vm = nn.Linear(4096, 500)
+		self.fc_lm = nn.Linear(500, 500)
+		self.fc_sp = nn.Linear(8, 500)
 
 		self.fc1 = nn.Linear(1500, 100)
 		#self.fc1_bn = nn.BatchNorm1d(4096)
