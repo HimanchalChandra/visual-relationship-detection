@@ -113,9 +113,35 @@ class LanguageModule(nn.Module):
 # 		return x
 
 
+class VisionModule(nn.Module):
+	""" Vision Moddule"""
+
+	def __init__(self):
+		super(VisionModule, self).__init__()
+		vgg = models.resnet18(pretrained=True)
+		modules = list(vgg.children())[:-2]
+		self.vgg_backbone = nn.Sequential(*modules)
+		self.roi_pool = ops.RoIPool(output_size=(7, 7), spatial_scale=0.03125)
+		self.fc = nn.Linear(75264, 4096)
+
+	def forward(self, x, rois_sub, rois_obj):
+		x = self.vgg_backbone(x)
+
+		x_sub = self.roi_pool(x, rois_sub)
+		x_obj = self.roi_pool(x, rois_obj)
+		
+		x = x.view(x.size(0), -1)
+		x_sub = x_sub.view(x_sub.size(0), -1)
+		x_obj = x_obj.view(x_obj.size(0), -1)
+	
+		x = torch.cat([x, x_sub, x_obj], dim=1)
+		x = self.fc(x)
+		x = F.relu(x)
+		return x
+
 
 class MFURLN(nn.Module):
-    def __init__(self, num_classes=10):
+	def __init__(self, num_classes=10):
 		super(MFURLN, self).__init__()
 		self.visual_module = VisionModule()
 		self.language_module = LanguageModule()
@@ -160,34 +186,6 @@ class MFURLN(nn.Module):
 
 		return x
 
-
-
-
-# class VisionModule(nn.Module):
-# 	""" Vision Moddule"""
-
-# 	def __init__(self):
-# 		super(VisionModule, self).__init__()
-# 		vgg = models.resnet18(pretrained=True)
-# 		modules = list(vgg.children())[:-2]
-# 		self.vgg_backbone = nn.Sequential(*modules)
-# 		self.roi_pool = ops.RoIPool(output_size=(7, 7), spatial_scale=0.03125)
-# 		self.fc = nn.Linear(75264, 4096)
-
-# 	def forward(self, x, rois_sub, rois_obj):
-# 		x = self.vgg_backbone(x)
-
-# 		x_sub = self.roi_pool(x, rois_sub)
-# 		x_obj = self.roi_pool(x, rois_obj)
-		
-# 		x = x.view(x.size(0), -1)
-# 		x_sub = x_sub.view(x_sub.size(0), -1)
-# 		x_obj = x_obj.view(x_obj.size(0), -1)
-	
-# 		x = torch.cat([x, x_sub, x_obj], dim=1)
-# 		x = self.fc(x)
-# 		x = F.relu(x)
-# 		return x
 
 
 # class MFURLN(nn.Module):
