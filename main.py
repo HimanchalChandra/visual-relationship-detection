@@ -33,6 +33,18 @@ from model import generate_model
 # print(base_net)
 # import torch
 
+def calculate_weight(opt):
+	file = open(os.path.join(opt.dataset_path,'json_dataset','annotations_train.json'),'r').read()
+	num_samples = []
+	for i in range(70):
+		a = file.split(f': {i},')
+		num = len(a) - 1
+		num_samples.append(num)
+
+	max_value = max(num_samples)
+	loss_weight = [max_value/i  for i in num_samples]
+	return loss_weight
+
 
 def main():
 	opt = parse_opts()
@@ -114,10 +126,10 @@ def main():
 	class_weights = torch.tensor(class_weights).cuda()
 	criterion1 = CrossEntropyLoss()
 
-	class_weights = [2 for _ in range(opt.num_classes - 1)]
-	class_weights.append(0.5)
+
+	class_weights = calculate_weight(opt)
 	class_weights = torch.tensor(class_weights).cuda()
-	criterion2 = CrossEntropyLoss()
+	criterion2 = CrossEntropyLoss(weight=class_weights)
 
 	criterion = [criterion1, criterion2]
 

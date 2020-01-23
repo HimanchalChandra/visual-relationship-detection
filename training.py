@@ -39,16 +39,17 @@ def train(model, loader, criterion, optimizer, epoch, device, opt):
         # compute outputs
         imgs, spatial_locations, word_vectors, targets_confidences, targets_predicates, rois_sub, rois_obj = imgs.to(device), spatial_locations.to(
             device), word_vectors.to(device),  targets_confidences.to(device), targets_predicates.to(device), rois_sub.to(device), rois_obj.to(device)
-        confidences, predicates = model(imgs, spatial_locations, word_vectors, rois_sub, rois_obj)
+        predicates = model(imgs, spatial_locations, word_vectors, rois_sub, rois_obj)
 
         # compute loss
-        loss1 = criterion[0](confidences, targets_confidences)
+        #loss1 = criterion[0](confidences, targets_confidences)
         # loss1 = (loss1 * weights_conf).mean()
 
         loss2 = criterion[1](predicates, targets_predicates)
         # loss2 = (loss2 * weights_pred).mean()
 
-        tot_loss = loss1 + loss2
+        #tot_loss = loss1 + loss2
+        tot_loss = loss2
         train_loss += tot_loss.item()
 
         losses.update(tot_loss.item(), imgs.size(0))
