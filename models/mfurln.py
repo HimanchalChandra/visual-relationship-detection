@@ -115,7 +115,7 @@ class LanguageModule(nn.Module):
 
 
 class MFURLN(nn.Module):
-    	def __init__(self, num_classes=10):
+    def __init__(self, num_classes=10):
 		super(MFURLN, self).__init__()
 		self.visual_module = VisionModule()
 		self.language_module = LanguageModule()
