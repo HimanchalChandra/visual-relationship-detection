@@ -53,6 +53,43 @@ for i, predicate in enumerate(predicates):
 	int2word_pred[i] = predicate
 
 
+
+def prepare_rois(batch_idx ,sub_bbox, obj_bbox, unioned, factor_h, factor_w):
+    
+	xmin_unioned, ymin_unioned, xmax_unioned, ymax_unioned = unioned
+
+	sub_xmin = sub_bbox[0]
+	sub_ymin = sub_bbox[1]
+	sub_xmax = sub_bbox[2]
+	sub_ymax = sub_bbox[3]
+	obj_xmin = obj_bbox[0]
+	obj_ymin = obj_bbox[1]
+	obj_xmax = obj_bbox[2]
+	obj_ymax = obj_bbox[3]
+
+	# find bounding box coordinates relative to unioned image
+	sub_x1 = sub_xmin - int(xmin_unioned)
+	sub_y1 = sub_ymin - int(ymin_unioned)
+	sub_x2 = sub_xmax - int(xmin_unioned)
+	sub_y2 = sub_ymax - int(ymin_unioned)
+
+	obj_x1 = obj_xmin - int(xmin_unioned)
+	obj_y1 = obj_ymin - int(ymin_unioned)
+	obj_x2 = obj_xmax - int(xmin_unioned)
+	obj_y2 = obj_ymax - int(ymin_unioned)
+
+	# rescaling of bboxes for image with dim (224,224)
+	bbox_sub_scaled = [batch_idx, sub_x1//factor_w, sub_y1 //
+						factor_h, sub_x2//factor_w, sub_y2//factor_h]
+	bbox_obj_scaled = [batch_idx, obj_x1//factor_w, obj_y1 //
+						factor_h, obj_x2//factor_w, obj_y2//factor_h]
+	
+
+	rois = {'sub': torch.Tensor([bbox_sub_scaled]), 'obj': torch.Tensor([bbox_obj_scaled])}
+	return rois
+
+
+
 			
 def main():
 
@@ -77,15 +114,18 @@ def main():
 	model = MFURLN(num_classes=71)
 	model = model.to(device)
 
-	model = nn.DataParallel(model)
+	# model = nn.DataParallel(model)
 
 
 	# load pretrained weights
-	checkpoint = torch.load('/Users/pranoyr/Desktop/model26.pth', map_location='cpu')
+	checkpoint = torch.load('/Volumes/Seagate/Neuroplex/model44.pth', map_location='cpu')
 	model.load_state_dict(checkpoint['model_state_dict'])
 	print("Model Restored")
 
 	for img_name in os.listdir('images'):
+    		
+			batch_idx = 0
+
 		# try:
 			img_rgb = Image.open(f'./images/{img_name}')
 			img_bgr = cv2.cvtColor(np.asarray(img_rgb), cv2.COLOR_RGB2BGR)
@@ -98,6 +138,8 @@ def main():
 			spatial_locations1 = []
 			word_vectors = []
 			word_names = []
+			rois_sub = []
+			rois_obj = []
 			detections1 = detections.copy()
 			j=0
 			for sub_label, x1_sub, y1_sub, x2_sub, y2_sub in detections:
@@ -114,6 +156,11 @@ def main():
 					# crop image
 					cropped_img = img_rgb.crop((int(xmin_unioned), int(
 						ymin_unioned), int(xmax_unioned), int(ymax_unioned)))
+
+					img_w, img_h = cropped_img.size
+					factor_h = img_h/224
+					factor_w = img_w/224
+
 					cropped_img = transform(cropped_img)
 					cropped_imgs.append(cropped_img)
 
@@ -140,6 +187,14 @@ def main():
 					spatial_locations.append([sub_x1, sub_y1, sub_x2, sub_y2, obj_x1, obj_y1, obj_x2, obj_y2])
 					spatial_locations1.append([sub_xmin, sub_ymin, sub_xmax, sub_ymax, obj_xmin, obj_ymin, obj_xmax, obj_ymax])
 
+					sub_bbox_gt = [sub_xmin, sub_ymin, sub_xmax, sub_ymax]
+					obj_bbox_gt = [obj_xmin, obj_ymin, obj_xmax, obj_ymax]
+					# prepare rois
+					rois = prepare_rois(batch_idx, sub_bbox_gt, obj_bbox_gt, unioned, factor_h, factor_w)
+					batch_idx+=1
+					rois_sub.append(rois['sub'])
+					rois_obj.append(rois['obj'])
+
 					# prepare word vectors
 					word_vectors.append([word2int_obj[sub_label], word2int_obj[obj_label]])
 			
@@ -148,13 +203,15 @@ def main():
 			spatial_locations1 = torch.Tensor(spatial_locations1)
 			word_vectors = torch.Tensor(word_vectors)
 			word_vectors = word_vectors.type(torch.LongTensor)
+			rois_sub = torch.stack(rois_sub)
+			rois_obj = torch.stack(rois_obj)
 		
 			print(imgs.shape)
 			print(spatial_locations.shape)
 			print(word_vectors.shape)
 
 			with torch.no_grad():
-				confidences, predicates = model(imgs, spatial_locations, word_vectors)
+				confidences, predicates = model(imgs, spatial_locations, word_vectors, rois_sub, rois_obj)
 			confidences = F.softmax(confidences, dim=1)
 			predicates = F.softmax(predicates, dim=1)
 
@@ -170,7 +227,7 @@ def main():
 
 			# apply mask for thresholding
 			# mask = scores > 0.2
-			mask = scores > 0.7
+			mask = scores > 0.95
 			preds = preds[mask]
 			scores = scores[mask]
 

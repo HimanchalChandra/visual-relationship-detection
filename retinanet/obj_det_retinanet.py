@@ -82,7 +82,7 @@ class ObjDetRetinanet:
         results = []
         for box, score, label in zip(boxes[0], scores[0], labels[0]):
             # scores are sorted so we can break
-            if score < 0.5:
+            if score < 0.7:
                 break
             b = box.astype(int)
             results.append([self.labels_to_names[label],b[0], b[1], b[2], b[3]])
