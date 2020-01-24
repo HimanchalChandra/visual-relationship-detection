@@ -116,12 +116,13 @@ class Metric:
 		# print(self.average_precision)
 
 		precision = precision_score(targets, preds, average=None)
-		print("precision")
+		print("Precision")
 		print(precision)
 
 		recall = recall_score(targets, preds, average=None)
-		print("recall")
+		print("Recall")
 		print(recall)
 
 		recall = recall_score(targets, preds, average='micro')
-		return recall
+		precision = precision_score(targets, preds, average='micro')
+		return recall, precision

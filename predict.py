@@ -111,14 +111,14 @@ def main():
 
 
 	# define model
-	model = MFURLN(num_classes=71)
+	model = MFURLN(num_classes=70)
 	model = model.to(device)
 
 	# model = nn.DataParallel(model)
 
 
 	# load pretrained weights
-	checkpoint = torch.load('/Volumes/Seagate/Neuroplex/model80.pth', map_location='cpu')
+	checkpoint = torch.load('/Volumes/Seagate/Neuroplex/model40.pth', map_location='cpu')
 	model.load_state_dict(checkpoint['model_state_dict'])
 	print("Model Restored")
 
