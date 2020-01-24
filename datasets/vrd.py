@@ -321,7 +321,8 @@ class VrdDataset(Dataset):
 		# load annotated data
 		annotation = self.annotations[self.imgs_list[idx]]
 		# load detections from object detection output
-		detection  = self.detections[self.imgs_list[idx]]
+		#detection  = self.detections[self.imgs_list[idx]]
+		detection = []
 
 		# prepare determined and undetermined batches
 		imgs, spatial_locations, word_vectors, predicates, binary_targets, rois_sub, rois_obj = self.prepare_data(
