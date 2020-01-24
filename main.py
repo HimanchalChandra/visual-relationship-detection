@@ -108,7 +108,7 @@ def main():
 	else:
 		dampening = opt.dampening
 	# define optimizer and criterion
-	optimizer = optim.Adam(parameters, lr=0.0003)
+	optimizer = optim.Adam(parameters)
 	# optimizer = optim.SGD(
 	# 		model.parameters(),
 	# 		lr=opt.learning_rate,
@@ -118,7 +118,9 @@ def main():
 	# 		nesterov=opt.nesterov)
 	# scheduler = lr_scheduler.ReduceLROnPlateau(optimizer, 'min', patience=opt.lr_patience)
 	drop_after_epoch = [10, 20, 30]
-	scheduler = optim.lr_scheduler.ExponentialLR(optimizer, gamma = 0.5)
+	# scheduler = optim.lr_scheduler.ExponentialLR(optimizer, gamma = 0.5)
+	scheduler = optim.lr_scheduler.ReduceLROnPlateau(
+			optimizer, 'min', patience=opt.lr_patience)
 
 	#criterion = BCEWithLogitsLoss(reduction='none')
 
@@ -156,7 +158,7 @@ def main():
 		# train, test model
 		train_loss, train_recall = train(
 			model, train_loader, criterion, optimizer, epoch, device, opt)
-		scheduler.step()
+		scheduler.step(train_loss)
 		
 		if (epoch) % opt.save_interval == 0:
 			# val_loss, val_recall = validate(model, val_loader, criterion, epoch, device, opt)

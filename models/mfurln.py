@@ -150,12 +150,11 @@ class MFURLN(nn.Module):
 		self.fc_lm = nn.Linear(500, 500)
 		self.fc_sp = nn.Linear(8, 500)
 
-		self.fc1 = nn.Linear(1500, 100)
-		#self.fc1_bn = nn.BatchNorm1d(4096)
-		self.fc2 = nn.Linear(100, 2)
-
-		#self.fc1_bn = nn.BatchNorm1d(4096)
+		# self.fc1 = nn.Linear(1500, 100)
+		# #self.fc1_bn = nn.BatchNorm1d(4096)
+		# self.fc2 = nn.Linear(100, 2)
 		self.fc3 = nn.Linear(1500, 500)
+		self.bn = nn.BatchNorm1d(500)
 		self.fc4 = nn.Linear(500, num_classes)
 
 	def forward(self, img, spatial_locations, word_vectors, rois_sub, rois_obj):
@@ -181,6 +180,7 @@ class MFURLN(nn.Module):
 		# relation subnetwork
 		#r = torch.cat([x_c, multi_model_features], dim=1)
 		x = self.fc3(multi_model_features)
+		x = self.bn(x)
 		x = F.relu(x)
 		x = self.fc4(x)
 

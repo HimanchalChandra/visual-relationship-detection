@@ -118,7 +118,7 @@ def main():
 
 
 	# load pretrained weights
-	checkpoint = torch.load('/Volumes/Seagate/Neuroplex/model44.pth', map_location='cpu')
+	checkpoint = torch.load('/Volumes/Seagate/Neuroplex/model80.pth', map_location='cpu')
 	model.load_state_dict(checkpoint['model_state_dict'])
 	print("Model Restored")
 
@@ -211,12 +211,12 @@ def main():
 			print(word_vectors.shape)
 
 			with torch.no_grad():
-				confidences, predicates = model(imgs, spatial_locations, word_vectors, rois_sub, rois_obj)
-			confidences = F.softmax(confidences, dim=1)
+				predicates = model(imgs, spatial_locations, word_vectors, rois_sub, rois_obj)
+			# confidences = F.softmax(confidences, dim=1)
 			predicates = F.softmax(predicates, dim=1)
 
-			print("confidences")
-			print(confidences.t())
+			# print("confidences")
+			# print(confidences.t())
 
 			scores, preds = predicates.max(dim=1, keepdim=True) # get the index of the max log-probability
 
