@@ -83,11 +83,19 @@ def main():
 			0.229, 0.224, 0.225])
 	])
 
-	# data loaders
+	
 	train_dataset = get_dataset(opt, 'train', transform=train_transform)
+	val_dataset = get_dataset(opt, 'test', transform=test_transform)
+
+	n_train_examples = int(len(train_dataset)*0.8)
+	n_valid_examples = len(train_dataset) - n_train_examples
+	# split data
+	train_dataset, val_dataset = torch.utils.data.random_split(train_dataset, [n_train_examples, n_valid_examples])
+
+	# data loaders
 	train_loader = DataLoader(train_dataset, batch_size=opt.batch_size, shuffle=True,
 							  num_workers=0, collate_fn=train_dataset.my_collate)
-	val_dataset = get_dataset(opt, 'test', transform=test_transform)
+
 	val_loader = DataLoader(val_dataset, batch_size=opt.batch_size, shuffle=True,
 							num_workers=0, collate_fn=val_dataset.my_collate)
 
