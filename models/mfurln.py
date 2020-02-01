@@ -45,52 +45,52 @@ def create_emb_layer(weights_matrix, non_trainable=False):
 	return emb_layer, embedding_dim
 
 
-# class LanguageModule(nn.Module):
-# 	""" Language Moddule"""
-
-# 	def __init__(self, hidden_dim, target_size):
-# 		super(LanguageModule, self).__init__()
-# 		#self.word_embeddings = nn.Embedding(vocab_size, embedding_dim)
-# 		self.word_embeddings, embedding_dim = create_emb_layer(
-# 			weights_matrix, True)
-# 		# The LSTM takes word embeddings as inputs, and outputs hidden states
-# 		# with dimensionality hidden_dim.
-# 		self.lstm = nn.LSTM(embedding_dim, hidden_dim,
-# 							num_layers=1, batch_first=True)
-# 		# The linear layer that maps from hidden state space to tag space
-# 		self.hidden2tag = nn.Linear(hidden_dim, target_size)
-
-# 	def forward(self, x):
-# 		x = self.word_embeddings(x)
-# 		self.lstm.flatten_parameters()
-# 		lstm_out, _ = self.lstm(x)
-# 		x = lstm_out[:, -1, :]
-# 		x = self.hidden2tag(x)
-# 		#x = F.log_softmax(x, dim=1)
-# 		return x
-
-
 class LanguageModule(nn.Module):
 	""" Language Moddule"""
 
-	def __init__(self):
+	def __init__(self, hidden_dim, target_size):
 		super(LanguageModule, self).__init__()
-
+		#self.word_embeddings = nn.Embedding(vocab_size, embedding_dim)
 		self.word_embeddings, embedding_dim = create_emb_layer(
 			weights_matrix, True)
-		self.fc1 = nn.Linear(600, 500)
-		self.fc2 = nn.Linear(500, 500)      
-		#self.fc3 = nn.Linear(512, 512)
+		# The LSTM takes word embeddings as inputs, and outputs hidden states
+		# with dimensionality hidden_dim.
+		self.lstm = nn.LSTM(embedding_dim, hidden_dim,
+							num_layers=1, batch_first=True)
+		# The linear layer that maps from hidden state space to tag space
+		self.hidden2tag = nn.Linear(hidden_dim, target_size)
 
 	def forward(self, x):
 		x = self.word_embeddings(x)
-		x = x.view(x.size(0),-1)
-		x = self.fc1(x)
-		x = F.relu(x)
-
-		x = self.fc2(x)
-		x = F.relu(x)
+		self.lstm.flatten_parameters()
+		lstm_out, _ = self.lstm(x)
+		x = lstm_out[:, -1, :]
+		x = self.hidden2tag(x)
+		#x = F.log_softmax(x, dim=1)
 		return x
+
+
+# class LanguageModule(nn.Module):
+# 	""" Language Moddule"""
+
+# 	def __init__(self):
+# 		super(LanguageModule, self).__init__()
+
+# 		self.word_embeddings, embedding_dim = create_emb_layer(
+# 			weights_matrix, True)
+# 		self.fc1 = nn.Linear(600, 500)
+# 		self.fc2 = nn.Linear(500, 500)      
+# 		#self.fc3 = nn.Linear(512, 512)
+
+# 	def forward(self, x):
+# 		x = self.word_embeddings(x)
+# 		x = x.view(x.size(0),-1)
+# 		x = self.fc1(x)
+# 		x = F.relu(x)
+
+# 		x = self.fc2(x)
+# 		x = F.relu(x)
+# 		return x
 
 
 
@@ -144,7 +144,7 @@ class MFURLN(nn.Module):
 	def __init__(self, num_classes=10):
 		super(MFURLN, self).__init__()
 		self.visual_module = VisionModule()
-		self.language_module = LanguageModule()
+		self.language_module = LanguageModule(300,500)
 
 		self.fc_vm = nn.Linear(4096, 500)
 		self.fc_lm = nn.Linear(500, 500)
