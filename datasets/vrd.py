@@ -51,9 +51,9 @@ class VrdDataset(Dataset):
 		with open(os.path.join(dataset_path, 'json_dataset', 'detections.json'), 'r') as f:
 			self.detections = json.load(f)
 		
-		# read image filenames
-		with open(os.path.join(dataset_path, f'{type}.txt'), 'r') as f:
-			image_names = f.read()
+		# # read image filenames
+		# with open(os.path.join(dataset_path, f'{type}.txt'), 'r') as f:
+		# 	image_names = f.read()
 		# self.imgs_list = image_names.split('\n')[:-1]
 		self.imgs_list = make_image_list(dataset_path, type)
 
