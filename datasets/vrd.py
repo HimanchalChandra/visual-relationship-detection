@@ -61,11 +61,11 @@ class VrdDataset(Dataset):
 		for i, obj in enumerate(objects):
 			self.class2idx_obj[obj] = i
 			
-		# self.imgs_list = make_image_list(dataset_path, type)
-		self.num_classes = num_classes
-		self.transform = transform
-		self.root = os.path.join(
-			dataset_path, 'sg_dataset', f'sg_{type}_images')
+		self.imgs_list = make_image_list(dataset_path, type)
+		# self.num_classes = num_classes
+		# self.transform = transform
+		# self.root = os.path.join(
+		# 	dataset_path, 'sg_dataset', f'sg_{type}_images')
 
 		self.batch_idx = 0
 
