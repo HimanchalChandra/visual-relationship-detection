@@ -9,6 +9,7 @@ from torchvision import transforms, utils
 import torch.optim as optim
 from torchvision.models import vgg16
 from PIL import Image, ImageFont, ImageDraw
+from util import my_collate
 from torch.nn import BCEWithLogitsLoss
 from torch.nn import CrossEntropyLoss
 from dataset import get_dataset
@@ -94,10 +95,10 @@ def main():
 
 	# data loaders
 	train_loader = DataLoader(train_dataset, batch_size=opt.batch_size, shuffle=True,
-							  num_workers=0, collate_fn=train_dataset.my_collate)
+							  num_workers=0, collate_fn=my_collate)
 
 	val_loader = DataLoader(val_dataset, batch_size=opt.batch_size, shuffle=True,
-							num_workers=0, collate_fn=val_dataset.my_collate)
+							num_workers=0, collate_fn=my_collate)
 
 	print(f'Number of training examples: {len(train_loader.dataset)}')
 	print(f'Number of validation examples: {len(val_loader.dataset)}')
