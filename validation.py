@@ -39,6 +39,6 @@ def validate(model, loader, criterion, epoch, device, opt):
 
     # show information
     recall = metric.compute_metrics()
-    print('Validation set ({:d} samples): Average loss: {:.4f}\tAcc: {:.4f}%'.format(losses.count, losses.avg, accuracies.avg * 100))
+    print('Validation set ({:d} samples): Average loss: {:.4f}\tRecall: {:.4f}'.format(losses.count, losses.avg, recall))
     return losses.avg, recall
 

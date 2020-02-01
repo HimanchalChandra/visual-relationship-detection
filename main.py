@@ -128,7 +128,7 @@ def main():
 			model, train_loader, criterion, optimizer, epoch, device, opt)
 		# scheduler.step(train_loss)
 		if (epoch) % opt.save_interval == 0:
-			# val_loss, val_recall = validate(model, val_loader, criterion, epoch, device, opt)
+			val_loss, val_recall = validate(model, val_loader, criterion, epoch, device, opt)
 			# scheduler.step(val_loss)
 			# # write summary
 			# summary_writer.add_scalar(
