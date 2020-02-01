@@ -54,8 +54,8 @@ class VrdDataset(Dataset):
 		# read image filenames
 		with open(os.path.join(dataset_path, f'{type}.txt'), 'r') as f:
 			image_names = f.read()
-		self.imgs_list = image_names.split('\n')[:-1]
-		# self.imgs_list = make_image_list(dataset_path, type)
+		# self.imgs_list = image_names.split('\n')[:-1]
+		self.imgs_list = make_image_list(dataset_path, type)
 
 		self.class2idx_obj = {}
 		for i, obj in enumerate(objects):
