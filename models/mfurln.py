@@ -75,7 +75,7 @@ class VisionModule(nn.Module):
 
 	def __init__(self):
 		super(VisionModule, self).__init__()
-		vgg = models.vgg16(pretrained=True)
+		vgg = models.resnet50(pretrained=True)
 		modules = list(vgg.children())[:-1]
 		self.vgg_backbone = nn.Sequential(*modules)
 		self.fc = nn.Linear(512, 4096)
