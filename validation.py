@@ -21,7 +21,7 @@ def validate(model, loader, criterion, epoch, device, opt):
     model.eval()
 
     losses = AverageMeter()
-    accuracies = AverageMeter()
+    metric = AverageMeter()
     metric = Metric(opt.num_classes)
     with torch.no_grad():
         for i, (imgs, spatial_locations, word_vectors, targets_predicates, targets_confidences) in enumerate(loader):
