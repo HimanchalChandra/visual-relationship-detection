@@ -166,8 +166,11 @@ class MFURLN(nn.Module):
 		# sp_out = spatial_locations.view(spatial_locations.size(0), -1)
 
 		vm_out = self.fc_vm(vm_out)
+		vm_out = F.relu(vm_out)
 		lm_out = self.fc_lm(lm_out)
+		lm_out = F.relu(lm_out)
 		sp_out = self.fc_sp(spatial_locations)
+		sp_out = F.relu(sp_out)
 
 		# concat
 		multi_model_features = torch.cat([vm_out, lm_out, sp_out], dim=1)
