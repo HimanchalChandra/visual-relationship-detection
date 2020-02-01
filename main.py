@@ -9,7 +9,6 @@ from torchvision import transforms, utils
 import torch.optim as optim
 from torchvision.models import vgg16
 from PIL import Image, ImageFont, ImageDraw
-from util import my_collate
 from torch.nn import BCEWithLogitsLoss
 from torch.nn import CrossEntropyLoss
 from dataset import get_dataset
@@ -84,21 +83,13 @@ def main():
 			0.229, 0.224, 0.225])
 	])
 
-	
-	train_dataset = get_dataset(opt, 'train', transform=train_transform)
-	val_dataset = get_dataset(opt, 'test', transform=test_transform)
-
-	n_train_examples = int(len(train_dataset)*0.8)
-	n_valid_examples = len(train_dataset) - n_train_examples
-	# split data
-	train_dataset, val_dataset = torch.utils.data.random_split(train_dataset, [n_train_examples, n_valid_examples])
-
 	# data loaders
+	train_dataset = get_dataset(opt, 'train', transform=train_transform)
 	train_loader = DataLoader(train_dataset, batch_size=opt.batch_size, shuffle=True,
-							  num_workers=0, collate_fn=my_collate)
-
+							  num_workers=0, collate_fn=train_dataset.my_collate)
+	val_dataset = get_dataset(opt, 'test', transform=test_transform)
 	val_loader = DataLoader(val_dataset, batch_size=opt.batch_size, shuffle=True,
-							num_workers=0, collate_fn=my_collate)
+							num_workers=0, collate_fn=val_dataset.my_collate)
 
 	print(f'Number of training examples: {len(train_loader.dataset)}')
 	print(f'Number of validation examples: {len(val_loader.dataset)}')
