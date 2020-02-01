@@ -118,7 +118,7 @@ class VisionModule(nn.Module):
 
 	def __init__(self):
 		super(VisionModule, self).__init__()
-		vgg = models.resnet18(pretrained=True)
+		vgg = models.vgg16(pretrained=True)
 		modules = list(vgg.children())[:-2]
 		self.vgg_backbone = nn.Sequential(*modules)
 		self.roi_pool = ops.RoIPool(output_size=(7, 7), spatial_scale=0.03125)
