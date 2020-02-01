@@ -75,13 +75,13 @@ class VisionModule(nn.Module):
 
 	def __init__(self):
 		super(VisionModule, self).__init__()
-		resnet = models.resnet18(pretrained=True)
-		modules = list(resnet.children())[:-1]
-		self.resnet_backbone = nn.Sequential(*modules)
+		vgg = models.vgg16(pretrained=True)
+		modules = list(vgg.children())[:-1]
+		self.vgg_backbone = nn.Sequential(*modules)
 		self.fc = nn.Linear(512, 4096)
 
 	def forward(self, x):
-		x = self.resnet_backbone(x)
+		x = self.vgg_backbone(x)
 		x = x.view(x.size(0), -1)
 		x = self.fc(x)
 		x = F.relu(x)
@@ -141,8 +141,11 @@ class MFURLN(nn.Module):
 		# sp_out = spatial_locations.view(spatial_locations.size(0), -1)
 
 		vm_out = self.fc_vm(vm_out)
+		vm_out = F.relu(vm_out)
 		lm_out = self.fc_lm(lm_out)
+		lm_out = F.relu(lm_out)
 		sp_out = self.fc_sp(spatial_locations)
+		sp_out = F.relu(sp_out)
 
 		# concat
 		multi_model_features = torch.cat([vm_out, lm_out, sp_out], dim=1)
