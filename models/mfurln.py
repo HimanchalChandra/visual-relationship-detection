@@ -78,7 +78,7 @@ class VisionModule(nn.Module):
 		vgg = models.vgg16(pretrained=True)
 		modules = list(vgg.children())[:-1]
 		self.vgg_backbone = nn.Sequential(*modules)
-		self.fc = nn.Linear(512, 4096)
+		self.fc = nn.Linear(25088, 4096)
 
 	def forward(self, x):
 		x = self.vgg_backbone(x)
