@@ -122,7 +122,7 @@ class VisionModule(nn.Module):
 		modules = list(vgg.children())[:-2]
 		self.vgg_backbone = nn.Sequential(*modules)
 		self.roi_pool = ops.RoIPool(output_size=(7, 7), spatial_scale=0.03125)
-		self.fc = nn.Linear(75264, 4096)
+		self.fc = nn.Linear(301056, 4096)
 
 	def forward(self, x, rois_sub, rois_obj):
 		x = self.vgg_backbone(x)
