@@ -11,10 +11,10 @@ base_net = nn.Sequential(*modules)
 
 print(base_net)
 
-x = torch.Tensor(1,3,224,224)
+# x = torch.Tensor(1,3,224,224)
 
-x = base_net(x)
-print(x.shape)
+# x = base_net(x)
+# print(x.shape)
 
 
 
