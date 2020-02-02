@@ -52,7 +52,7 @@ class LanguageModule(nn.Module):
 		super(LanguageModule, self).__init__()
 		#self.word_embeddings = nn.Embedding(vocab_size, embedding_dim)
 		self.word_embeddings, embedding_dim = create_emb_layer(
-			weights_matrix, True)
+			weights_matrix, False)
 		# The LSTM takes word embeddings as inputs, and outputs hidden states
 		# with dimensionality hidden_dim.
 		self.lstm = nn.LSTM(embedding_dim, hidden_dim,
