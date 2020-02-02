@@ -118,11 +118,11 @@ class VisionModule(nn.Module):
 
 	def __init__(self):
 		super(VisionModule, self).__init__()
-		vgg = models.resnet50(pretrained=True)
+		vgg = models.resnet18(pretrained=True)
 		modules = list(vgg.children())[:-2]
 		self.vgg_backbone = nn.Sequential(*modules)
 		self.roi_pool = ops.RoIPool(output_size=(7, 7), spatial_scale=0.03125)
-		self.fc = nn.Linear(301056, 4096)
+		self.fc = nn.Linear(75264, 4096)
 
 	def forward(self, x, rois_sub, rois_obj):
 		x = self.vgg_backbone(x)
